@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ScheduleMaster.Models;
+using ScheduleMaster.Services;
 
 namespace ScheduleMaster.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        //private readonly IUsersService _userservice;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger) //IUsersService usersService)
         {
             _logger = logger;
+            //_userservice = usersService;
         }
 
         public IActionResult Index()
