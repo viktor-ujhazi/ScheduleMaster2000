@@ -1,0 +1,13 @@
+#header{
+    border:solid;
+    width: 700px;
+}
+
+.headerElement{
+    padding-right: 30px;
+}
+
+#firstElement{
+    padding-left: 30px;
+    padding-right: 30px;
+}
