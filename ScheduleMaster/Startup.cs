@@ -1,30 +1,42 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using ScheduleMaster.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Data;
+using Npgsql;
 
 namespace ScheduleMaster
 {
     public class Startup
     {
+        private readonly string connectionString;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            connectionString = InitConnectionString();
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        private string InitConnectionString()
+        {
+            string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "Host=localhost;Username=postgres;Password=admin;Database=ScheduleMaster";
+            return connectionString;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
             services.AddScoped<ICyberSecurityProvider, PasswordEncrypter>();
+            services.AddScoped<IDbConnection>(_ =>
+            {
+                var connection = new NpgsqlConnection(connectionString);
+                connection.Open();
+                return connection;
+            });
             services.AddScoped<IUsersService, SQLUsersService>();
 
         }
