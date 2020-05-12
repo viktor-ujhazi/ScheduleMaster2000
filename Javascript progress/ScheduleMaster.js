@@ -21,9 +21,14 @@ document.addEventListener("DOMContentLoaded",() => {
     grid.appendChild(element)
 })
 
-function Login(){
-    console.log("SHIIIIIIT")
-    // let loginElement = document.querySelector("#login")
-    // loginElement.setAttribute("style","display: hidden")
-    // document.querySelector("#login")
+function Login (form) {
+    let loginForm = document.querySelector("#loginForm")
+    loginForm.setAttribute("style","visibility: visible")
+
+    let username = form.username.value;
+    let password = form.password.value;
+    
+    console.log("Name: "+username+" Password: "+password)
+
+    //if logged in: document.querySelector("#login").textContent = "Logout"
 }
