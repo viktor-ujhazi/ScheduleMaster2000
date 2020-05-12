@@ -1,9 +1,27 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
+<body>
 
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div style="margin: inherit">
+        <br> <br> <br>
+        <form id="loginForm" method="POST" style="display: none">
+            Username: <br>
+            <input type="text" name="username" value=""><P>
+                Password: <br>
+                <input type="text" name="password" value="">
+            <P>
+
+                <input type="button" name="button" value="Login" onClick="Login(this.form)">
+        </form>
+
+        <form id="registerForm" method="POST" style="display: none">
+            Username: <br>
+            <input type="text" name="username" value=""><P>
+                Password: <br>
+                <input type="text" name="password" value="">
+            <P>
+
+                <input type="button" name="button" value="Create" onClick="Register(this.form)">
+        </form>
+    </div>
+</body>
