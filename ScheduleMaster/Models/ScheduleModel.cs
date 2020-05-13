@@ -7,13 +7,17 @@ namespace ScheduleMaster.Models
 {
     public class ScheduleModel
     {
-        string Title { get; set; }
-        int Time { get; set; }
+        public int ScheduleID { get; set; }
+        public string Title { get; set; }
+        public int NumOfColumns { get; set; }
+        public int UserID { get; set; }
+        public bool IsPublic { get; set; }
 
-        ScheduleModel(string title, int time)
-        {
-            Title = title;
-            Time = time;
-        }
+
+        //ScheduleModel(string title, int time)
+        //{
+        //    Title = title;
+        //    Time = time;
+        //}
     }
 }
