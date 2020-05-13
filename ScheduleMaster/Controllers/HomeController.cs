@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ScheduleMaster.Models;
@@ -35,6 +34,15 @@ namespace ScheduleMaster.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public ActionResult MyAjaxGET()
+        {
+            string temp = Request.Query["username"];
+
+            // Perform your operation  
+
+            return Json(temp);
         }
     }
 }

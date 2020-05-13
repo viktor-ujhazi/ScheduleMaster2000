@@ -53,8 +53,7 @@ function HideLoginPage() {
 function Login(form) {
     let username = form.username.value;
     let password = form.password.value;
-    console.log("Name: " + username + " Password: " + password);
-    alert("Welcome!");
+
     loginForm.setAttribute("style", "display: none");
 
     let headerToHide = document.querySelector("#loginHeader");
@@ -106,49 +105,17 @@ function Logout() {
 };
 
 
-//function ShowSchedule(model) {
-//    model.array.forEach(function (row) {
-//        console.log(row.title);
-//        console.log(row.name);
-//        console.log(row.adress);
-//    });
-//} ;
+var data = new FormData();
+data.append('user', 'person');
+data.append('pwd', 'password');
+data.append('organization', 'place');
+data.append('requiredkey', 'key');
 
-
-function SendAjaxGET() {
-    var xmlHttp;
-    //Let us create the XML http object
-    xmlHttp = null;
-
-    if (window.XMLHttpRequest) {
-        //for new browsers
-        xmlHttp = new XMLHttpRequest();
-    }
-    else if (window.ActiveXObject) {
-        //for old ones
-        //xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-        var strName = "Msxml2.XMLHTTP"
-        if (navigator.appVersion.indexOf("MSIE 5.5") >= 0) {
-            strName = "Microsoft.XMLHTTP"
-        }
-        try {
-            xmlHttp = new ActiveXObject(strName);
-        }
-        catch (e) {
-            alert("Error. Scripting for ActiveX might be disabled")
-            return false;
-        }
-    }
-
-    if (xmlHttp != null) {
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                alert(xmlHttp.responseText);
-            }
-        }
-
-        //Pass the value to a web page on server as query string using XMLHttpObject.
-        xmlHttp.open("GET", "Home/Index?userName=manasm", true);
-        xmlHttp.send();
-    }
+function SendData(destination) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', destination, true);
+    xhr.onload = function () {
+        console.log(this.responseText);
+    };
+    xhr.send(data);
 }
