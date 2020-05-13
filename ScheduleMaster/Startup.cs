@@ -39,6 +39,9 @@ namespace ScheduleMaster
                 return connection;
             });
             services.AddScoped<IUsersService, SQLUsersService>();
+            services.AddScoped<ITasksService, SQLTasksService>();
+            services.AddScoped<ISchedulesService, SQLSchedulesService>();
+
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie
             (CookieAuthenticationDefaults.AuthenticationScheme, options =>
