@@ -82,11 +82,13 @@ function Login(form) {
 
     SendData("User/Login", data);
 
-    loginForm.setAttribute("style", "display: none");
+    if (this.responsext === "Yeah") {
+        loginForm.setAttribute("style", "display: none");
 
-    HideLoginForm();
+        HideLoginForm();
 
-    ShowLogout();
+        ShowLogout();
+    }
 
     //ShowScheduleOption();
 }
