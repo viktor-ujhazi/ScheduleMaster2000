@@ -28,6 +28,23 @@ namespace ScheduleMaster.Controllers
             return Redirect($"../Home/Index");
         }
 
+
+
+
+        public ActionResult MyAjaxGET()
+        {
+            string temp = Request.Query["userName"];
+
+            // Perform your operation  
+
+            return Json(temp);
+        }
+
+
+
+
+
+
         public IActionResult NewUser()
         {
             return View();
