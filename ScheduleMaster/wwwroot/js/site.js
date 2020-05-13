@@ -70,20 +70,21 @@ function Login(form) {
     grid.appendChild(element);
 
 
-    //element = document.createElement("a");
-    //element.textContent = "Show Schedule";
-    //element.setAttribute("class", "headerElement");
-    //element.setAttribute("id", "scheduleHeader");
-    //element.addEventListener("click", ShowSchedule);
-    //grid.appendChild(element);
+    element = document.createElement("a");
+    element.textContent = "Show Schedule";
+    element.setAttribute("class", "headerElement");
+    element.setAttribute("id", "scheduleHeader");
+    element.addEventListener("click", SendAjaxGET);
+    grid.appendChild(element);
 }
 
 
 function Register(form) {
     let username = form.username.value;
     let password = form.password.value;
+    let email = form.email.value;
 
-    console.log("Name: " + username + " Password: " + password);
+    console.log("Name: " + username + " Password: " + password + " E-mail: " + email);
     alert("Welcome to our services noob!");
     registerForm.setAttribute("style", "display: none");
 }
@@ -93,8 +94,8 @@ function Logout() {
     let headerToRemove = document.querySelector("#logoutHeader");
     grid.removeChild(headerToRemove);
 
-    //headerToRemove = document.querySelector("#scheduleHeader");
-    //grid.removeChild(headerToRemove);
+    headerToRemove = document.querySelector("#scheduleHeader");
+    grid.removeChild(headerToRemove);
 
     let headerToShow = document.querySelector("#loginHeader");
     headerToShow.setAttribute("style", "display: unset");
