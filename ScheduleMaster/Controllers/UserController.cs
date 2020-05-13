@@ -29,14 +29,15 @@ namespace ScheduleMaster.Controllers
             return Redirect($"../Home/Index");
         }
 
-        public ActionResult MyAjaxGET()
-        {
-            string temp = Request.Query["userName"];
+        //public ActionResult MyAjaxGET()
+        //{
+        //    string temp = Request.Query["userName"];
 
-            // Perform your operation  
+        //    // Perform your operation  
 
-            return Json(temp);
-        }
+        //    return Json(temp);
+        //}
+
         [HttpPost]
         public ActionResult NewUser()
         {
@@ -83,8 +84,7 @@ namespace ScheduleMaster.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-
-            return Json("Yeah");
+            return Json(_sqlUsersService.GetUserId(email));
         }
 
         [Authorize]

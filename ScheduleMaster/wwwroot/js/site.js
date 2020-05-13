@@ -2,6 +2,7 @@
 let currentProfileEmail = null;
 
 document.addEventListener("DOMContentLoaded", () => {
+    
     let element = document.createElement("a");
     element.textContent = "Home";
     element.setAttribute("id", "firstElement");
@@ -82,14 +83,6 @@ function Login(form) {
     data.append('email', form.email.value);
 
     SendData("User/Login", data);
-
-    if (this.responsext === "Yeah") {
-        loginForm.setAttribute("style", "display: none");
-		currentProfileEmail =  form.email.value;
-        HideLoginForm();
-        ShowLogout();
-    }
-
     //ShowScheduleOption();
 }
 
@@ -128,7 +121,48 @@ function SendData(destination, data) {
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                alert(xhr.responseText);
+                if (xhr.responseText != '"Gottcha!"') {   
+                    loginForm.setAttribute("style", "display: none");
+                    HideLoginForm();
+                    ShowLogout();
+
+                    var data = new FormData();
+                    data.append('userid', xhr.responseText);
+                    SendDataToSchedule("Schedule/Index", data);
+                }
+            }
+        }
+        xhr.open('POST', destination, true);
+        xhr.send(data);
+    }
+}
+
+
+function SendDataToSchedule(destination, data){
+    let xhr = new XMLHttpRequest();
+    if (xhr != null) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+               console.log(xhr.responseText);   //folytat-folytat
+               let obj = JSON.parse(xhr.responseText);
+                //obj.value[0].title az első elem a scheduleok között
+                
+                
+                var sidebar = document.querySelector(".sidenav");
+                sidebar.setAttribute("style", "display: unset");
+                for(let i = 0; i < obj.value.length; i++){
+                    let sidePoint = document.createElement("a");
+                    let uniqueId = "sidebar" + i;
+
+                    sidePoint.setAttribute("id", uniqueId);
+                    sidePoint.textContent = obj.value[i].title;
+
+                    sidebar.appendChild(sidePoint);
+                }
+
+
+
+                //admin@admin.com
             }
         }
         xhr.open('POST', destination, true);
