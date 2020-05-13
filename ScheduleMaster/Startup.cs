@@ -41,6 +41,9 @@ namespace ScheduleMaster
             services.AddScoped<IUsersService, SQLUsersService>();
             services.AddScoped<ITasksService, SQLTasksService>();
             services.AddScoped<ISchedulesService, SQLSchedulesService>();
+            services.AddScoped<IDaysService, SQLDaysService>();
+            services.AddScoped<ISlotsService, SQLSlotsService>();
+
 
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie

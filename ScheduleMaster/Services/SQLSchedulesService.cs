@@ -22,33 +22,33 @@ namespace ScheduleMaster.Services
             {
                 ScheduleID = (int)reader["schedule_id"],
                 Title = (string)reader["title"],
-                NumOfColumns = (int)reader["num_of_columns"],
+                NumOfDays = (int)reader["num_of_days"],
                 UserID = (int)reader["user_id"],
-                IsPublic = (bool)reader["public"]
+                IsPublic = (bool)reader["is_public"]
             };
         }
 
 
 
-        public void AddSchedule(string title, int numOfColumns, int userID)
+        public void AddSchedule(string title, int numOfDays, int userID)
         {
             using var command = _connection.CreateCommand();
 
             var titleParam = command.CreateParameter();
             titleParam.ParameterName = "title";
-            titleParam.Value = title;
+            titleParam.Value = (object)title ?? DBNull.Value;
 
-            var numOfColumnsParam = command.CreateParameter();
-            numOfColumnsParam.ParameterName = "num_of_columns";
-            numOfColumnsParam.Value = numOfColumns;
+            var numOfDaysParam = command.CreateParameter();
+            numOfDaysParam.ParameterName = "num_of_days";
+            numOfDaysParam.Value = numOfDays;
 
             var userIDParam = command.CreateParameter();
             userIDParam.ParameterName = "user_id";
             userIDParam.Value = userID;
 
-            command.CommandText = "SELECT insert_into_schedule(@title, @num_of_columns, @user_id)";
+            command.CommandText = "SELECT insert_into_schedule(@title, @num_of_days, @user_id)";
             command.Parameters.Add(titleParam);
-            command.Parameters.Add(numOfColumnsParam);
+            command.Parameters.Add(numOfDaysParam);
             command.Parameters.Add(userIDParam);
 
             command.ExecuteNonQuery();
@@ -88,7 +88,7 @@ namespace ScheduleMaster.Services
 
         }
 
-        public void UpdateSchedule(int schedule_id, string title, int numOfColumns, int userID, bool isPublic)
+        public void UpdateSchedule(int schedule_id, string title, int numOfDays, int userID, bool isPublic)
         {
             using var command = _connection.CreateCommand();
 
@@ -100,23 +100,23 @@ namespace ScheduleMaster.Services
             titleParam.ParameterName = "title";
             titleParam.Value = (object)title ?? DBNull.Value;
 
-            var numOfColumnsParam = command.CreateParameter();
-            numOfColumnsParam.ParameterName = "num_of_columns";
-            numOfColumnsParam.Value = numOfColumns;
+            var numOfDaysParam = command.CreateParameter();
+            numOfDaysParam.ParameterName = "num_of_days";
+            numOfDaysParam.Value = numOfDays;
 
             var userIdParam = command.CreateParameter();
             userIdParam.ParameterName = "user_id";
             userIdParam.Value = userID;
 
             var isPublicParam = command.CreateParameter();
-            isPublicParam.ParameterName = "public";
+            isPublicParam.ParameterName = "is_public";
             isPublicParam.Value = isPublic;
 
-            command.CommandText = "UPDATE schedules SET title = @title, num_of_columns = @num_of_columns, public = @public WHERE schedule_id = @schedule_id";
+            command.CommandText = "UPDATE schedules SET title = @title, num_of_days = @num_of_days, is_public = @is_public WHERE schedule_id = @schedule_id";
 
             command.Parameters.Add(scheduleIdParam);
             command.Parameters.Add(titleParam);
-            command.Parameters.Add(numOfColumnsParam);
+            command.Parameters.Add(numOfDaysParam);
             command.Parameters.Add(userIdParam);
             command.Parameters.Add(isPublicParam);
 

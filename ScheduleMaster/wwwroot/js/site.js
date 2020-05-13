@@ -125,11 +125,6 @@ function SendData(destination, data) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 alert(xhr.responseText);
-                console.log(xhr.responseText);
-                if (xhr.responseText === '"Yeah"') {
-                    let logintext = document.querySelector('.testText');
-                    logintext.setAttribute("style", "display: unset");
-                }
             }
         }
         xhr.open('POST', destination, true);

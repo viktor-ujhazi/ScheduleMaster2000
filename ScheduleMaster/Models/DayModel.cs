@@ -7,9 +7,10 @@ namespace ScheduleMaster.Models
 {
     public class DayModel
     {
-        public int ID { get; set; }
+        public int DayID { get; set; }
+        public int ScheduleID { get; set; }
         public string Title { get; set; }
-        public string Content { get; set; }
-        public int UserID { get; set; }
+        
+        
     }
 }

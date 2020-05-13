@@ -35,11 +35,11 @@ namespace ScheduleMaster.Services
 
             var titleParam = command.CreateParameter();
             titleParam.ParameterName = "title";
-            titleParam.Value = title;
+            titleParam.Value = (object)title ?? DBNull.Value;
 
             var contentParam = command.CreateParameter();
             contentParam.ParameterName = "content";
-            contentParam.Value = content;
+            contentParam.Value = (object)content ?? DBNull.Value;
 
             var userIDParam = command.CreateParameter();
             userIDParam.ParameterName = "user_id";
