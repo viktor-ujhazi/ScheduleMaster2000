@@ -1,5 +1,5 @@
 ﻿const grid = document.querySelector("#headerGrid");
-let currentProfile = null;
+let currentProfileEmail = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     let element = document.createElement("a");
@@ -85,6 +85,7 @@ function Login(form) {
 
     loginForm.setAttribute("style", "display: none");
 
+    currentProfileEmail =  form.email.value;
     HideLoginForm();
 
     ShowLogout();
@@ -117,6 +118,8 @@ function Logout() {
 
     headerToShow = document.querySelector("#registerHeader");
     headerToShow.setAttribute("style", "display: unset");
+
+    currentProfileEmail = null;
 };
 
 
