@@ -30,7 +30,7 @@ namespace ScheduleMaster.Services
             passwordParam.ParameterName = "password";
             passwordParam.Value = password;
 
-            command.CommandText = @"INSERT INTO ""user"" (username, password, email) VALUES (@username, @password, @email)";
+            command.CommandText = @"INSERT INTO users (username, password, email) VALUES (@username, @password, @email)";
             command.Parameters.Add(usernameParam);
             command.Parameters.Add(passwordParam);
             command.Parameters.Add(emailParam);
