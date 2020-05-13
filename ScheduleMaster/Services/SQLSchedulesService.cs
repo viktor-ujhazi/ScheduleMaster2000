@@ -46,12 +46,13 @@ namespace ScheduleMaster.Services
             userIDParam.ParameterName = "user_id";
             userIDParam.Value = userID;
 
-            command.CommandText = @"INSERT INTO schedules (title, num_of_columns, user_id) VALUES (@title, @num_of_columns, @user_id)";
+            command.CommandText = "SELECT insert_into_schedule(@title, @num_of_columns, @user_id)";
             command.Parameters.Add(titleParam);
             command.Parameters.Add(numOfColumnsParam);
             command.Parameters.Add(userIDParam);
 
             command.ExecuteNonQuery();
+
         }
         public ScheduleModel GetSchedule(int id)
         {
