@@ -1,4 +1,5 @@
 ﻿const grid = document.querySelector("#headerGrid");
+let currentProfile = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     let element = document.createElement("a");
@@ -71,10 +72,10 @@ function Login(form) {
 
 
     element = document.createElement("a");
-    element.textContent = "Show Schedule";
+    element.textContent = "Show Schedules";
     element.setAttribute("class", "headerElement");
     element.setAttribute("id", "scheduleHeader");
-    element.addEventListener("click", SendAjaxGET);
+    element.addEventListener("click", ShowScedules);
     grid.appendChild(element);
 }
 
@@ -117,4 +118,16 @@ function SendData(destination, data) {
         console.log(data);
     };
     xhr.send(data);
+}
+
+
+
+
+
+
+
+
+
+function ShowScedules(){
+
 }
