@@ -7,7 +7,7 @@ using ScheduleMaster.Models;
 
 namespace ScheduleMaster.Services
 {
-    public class SQLTasksService
+    public class SQLTasksService : ITasksService
     {
         private readonly IDbConnection _connection;
 
@@ -85,7 +85,7 @@ namespace ScheduleMaster.Services
             return tasks;
 
         }
-        
+
         public void UpdateTask(int taskID, string title, string content, int userID)
         {
             using var command = _connection.CreateCommand();
@@ -93,7 +93,7 @@ namespace ScheduleMaster.Services
             var taskIdParam = command.CreateParameter();
             taskIdParam.ParameterName = "task_id";
             taskIdParam.Value = taskID;
-            
+
             var titleParam = command.CreateParameter();
             titleParam.ParameterName = "title";
             titleParam.Value = (object)title ?? DBNull.Value;

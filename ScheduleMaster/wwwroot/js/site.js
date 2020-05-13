@@ -50,27 +50,24 @@ function HideLoginPage() {
     loginForm.setAttribute("style", "display: none");
 }
 
-
-function Login(form) {
-    let username = form.username.value;
-    let password = form.password.value;
-
-    loginForm.setAttribute("style", "display: none");
-
+function HideLoginForm() {
     let headerToHide = document.querySelector("#loginHeader");
     headerToHide.setAttribute("style", "display: none");
     headerToHide = document.querySelector("#registerHeader");
     headerToHide.setAttribute("style", "display: none");
 
+}
 
+function ShowLogout() {
     element = document.createElement("a");
     element.textContent = "Logout";
     element.setAttribute("class", "headerElement");
     element.setAttribute("id", "logoutHeader");
     element.addEventListener("click", Logout);
     grid.appendChild(element);
+}
 
-
+function ShowScheduleOption() {
     element = document.createElement("a");
     element.textContent = "Show Schedules";
     element.setAttribute("class", "headerElement");
@@ -79,18 +76,30 @@ function Login(form) {
     grid.appendChild(element);
 }
 
+function Login(form) {
+    var data = new FormData();
+    data.append('pwd', form.password.value);
+    data.append('email', form.email.value);
+
+    SendData("User/Login", data);
+
+    loginForm.setAttribute("style", "display: none");
+
+    HideLoginForm();
+
+    ShowLogout();
+
+    //ShowScheduleOption();
+}
+
 
 function Register(form) {
     var data = new FormData();
     data.append('username', form.username.value);
     data.append('pwd', form.password.value);
     data.append('email', form.email.value);
-    //let username = form.username.value;
-    //let password = form.password.value;
-    //let email = form.email.value;
 
-    SendData("User/NewUser", data)
-
+    SendData("User/NewUser", data);
 
     registerForm.setAttribute("style", "display: none");
 }
@@ -113,21 +122,13 @@ function Logout() {
 
 function SendData(destination, data) {
     let xhr = new XMLHttpRequest();
-    xhr.open('POSt', destination, true);
-    xhr.onload = function () {
-        console.log(data);
-    };
-    xhr.send(data);
-}
-
-
-
-
-
-
-
-
-
-function ShowScedules(){
-
+    if (xhr != null) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert(xhr.responseText);
+            }
+        }
+        xhr.open('POST', destination, true);
+        xhr.send(data);
+    }
 }

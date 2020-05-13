@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data;
 using Npgsql;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ScheduleMaster
 {
@@ -38,6 +39,17 @@ namespace ScheduleMaster
                 return connection;
             });
             services.AddScoped<IUsersService, SQLUsersService>();
+            services.AddScoped<ITasksService, SQLTasksService>();
+            services.AddScoped<ISchedulesService, SQLSchedulesService>();
+
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie
+            (CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.LoginPath = "/User/Login";
+                options.LogoutPath = "/User/Logout";
+            }
+            );
 
         }
 

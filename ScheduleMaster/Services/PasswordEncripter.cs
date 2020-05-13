@@ -9,7 +9,7 @@ namespace ScheduleMaster.Services
 {
     public class PasswordEncrypter : ICyberSecurityProvider
     {
-        public string cs = "Host=localhost;Username=postgres;Password=admin;Database=AskMate";
+        public string cs = "Host=localhost;Username=postgres;Password=admin;Database=ScheduleMaster";
 
         public string EncryptPassword(string password)
         {
@@ -27,11 +27,11 @@ namespace ScheduleMaster.Services
             return savedPasswordHash;
         }
 
-        public bool IsValidUser(string username, string password)
+        public bool IsValidUser(string email, string password)
         {
             try
             {
-                string savedPassword = GetUserPassword(username);// get the pw from database
+                string savedPassword = GetUserPassword(email);// get the pw from database
 
                 byte[] hashBytes = Convert.FromBase64String(savedPassword);
                 /* Get the salt */
@@ -56,9 +56,9 @@ namespace ScheduleMaster.Services
             }
         }
 
-        public string GetUserPassword(string username)
+        public string GetUserPassword(string email)
         {
-            var sql = $"SELECT user_password as password FROM users WHERE user_name = '{username}'";
+            var sql = $"SELECT password FROM users WHERE email = '{email}'";
             var result = "";
             using (var conn = new NpgsqlConnection(cs))
             {

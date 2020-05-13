@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleMaster.Services
 {
-    public class SQLSchedulesService
+    public class SQLSchedulesService : ISchedulesService
     {
         private readonly IDbConnection _connection;
 

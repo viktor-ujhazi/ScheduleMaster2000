@@ -46,36 +46,30 @@ namespace ScheduleMaster.Controllers
 
             try
             {
-                _sqlUsersService.AddUser(email, name, encryptedPassword);
+                _sqlUsersService.AddUser(name, email, encryptedPassword);
             }
             catch (Npgsql.PostgresException)
             {
 
-                return Redirect("InvalidUsername");
+                return Json("Email address already taken!");
             }
 
-            return Redirect("Login");
+            return Json("Sucess!");
         }
 
-        public IActionResult InvalidUsername()
-        {
-            return View();
-        }
-        [AllowAnonymous]
-        public IActionResult Login()
-        {
-            return View();
-        }
+
 
         [HttpPost]
-        public async Task<ActionResult> LoginAsync([FromForm] string username, [FromForm] string password)
+        public async Task<ActionResult> LoginAsync()
         {
-            if (!_cyberSecurity.IsValidUser(username, password))
+            var password = Request.Form["pwd"];
+            var email = Request.Form["email"];
+            if (!_cyberSecurity.IsValidUser(email, password))
             {
-                return RedirectToAction("Index", "Home");
+                return Json("Gottcha!");
             }
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
 
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -89,7 +83,8 @@ namespace ScheduleMaster.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            return RedirectToAction("DetailsOfCurrentUser", "Home");
+
+            return Json("Yeah");
         }
 
         [Authorize]
