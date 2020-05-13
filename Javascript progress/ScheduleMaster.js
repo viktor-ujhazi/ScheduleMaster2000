@@ -63,7 +63,10 @@ function Login (form) {
     element.textContent = "Show Schedule";
     element.setAttribute("class","headerElement");
     element.setAttribute("id","scheduleHeader");
-    element.addEventListener("click",ShowSchedule);
+
+    let asd=["Title","Hours","asd"];
+    element.addEventListener("click",function(){
+        ShowSchedule(asd)});
     grid.appendChild(element);
 }
 
@@ -93,10 +96,12 @@ function Logout(){
 }
 
 
-function ShowSchedule(model){
-    model.array.forEach(function(row) {
-        console.log(row.title)
-        console.log(row.name)
-        console.log(row.adress)
-    });
+function ShowSchedule(aaa){
+    // model.array.forEach(function(row) {
+    //     console.log(row.title)
+    //     console.log(row.name)
+    //     console.log(row.adress)
+    // });
+    console.log("ITT JELENIK MEG A TABLE MAJD ECCÖR")
+    console.log(aaa[0])
 }
