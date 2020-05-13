@@ -148,7 +148,7 @@ function SendAjaxGET() {
         }
 
         //Pass the value to a web page on server as query string using XMLHttpObject.
-        xmlHttp.open("GET", "Home/MyAjaxGET?userName=manasm", true);
+        xmlHttp.open("GET", "Home/Index?userName=manasm", true);
         xmlHttp.send();
     }
 }
