@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
 
 namespace ScheduleMaster.Controllers
 {
@@ -28,9 +29,6 @@ namespace ScheduleMaster.Controllers
             return Redirect($"../Home/Index");
         }
 
-
-
-
         public ActionResult MyAjaxGET()
         {
             string temp = Request.Query["userName"];
@@ -39,20 +37,12 @@ namespace ScheduleMaster.Controllers
 
             return Json(temp);
         }
-
-
-
-
-
-
-        public IActionResult NewUser()
-        {
-            return View();
-        }
         [HttpPost]
-        public IActionResult NewUser([FromForm]string email, [FromForm] string name, [FromForm] string password)
+        public ActionResult NewUser()
         {
-            var encryptedPassword = _cyberSecurity.EncryptPassword(password);
+            var name = Request.Form["username"];
+            var email = Request.Form["email"];
+            var encryptedPassword = _cyberSecurity.EncryptPassword(Request.Form["pwd"]);
 
             try
             {

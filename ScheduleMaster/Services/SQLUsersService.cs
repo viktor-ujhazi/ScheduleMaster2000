@@ -24,7 +24,7 @@ namespace ScheduleMaster.Services
 
             var emailParam = command.CreateParameter();
             emailParam.ParameterName = "email";
-            emailParam.Value = password;
+            emailParam.Value = email;
 
             var passwordParam = command.CreateParameter();
             passwordParam.ParameterName = "password";
