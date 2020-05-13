@@ -83,12 +83,12 @@ function Login(form) {
 
     SendData("User/Login", data);
 
-    loginForm.setAttribute("style", "display: none");
-
-    currentProfileEmail =  form.email.value;
-    HideLoginForm();
-
-    ShowLogout();
+    if (this.responsext === "Yeah") {
+        loginForm.setAttribute("style", "display: none");
+		currentProfileEmail =  form.email.value;
+        HideLoginForm();
+        ShowLogout();
+    }
 
     //ShowScheduleOption();
 }
