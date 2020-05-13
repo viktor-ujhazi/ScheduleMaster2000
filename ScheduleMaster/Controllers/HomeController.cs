@@ -36,7 +36,7 @@ namespace ScheduleMaster.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public ActionResult MyAjaxGET()
+        public IActionResult MyAjaxGET()
         {
             string temp = Request.Query["username"];
 

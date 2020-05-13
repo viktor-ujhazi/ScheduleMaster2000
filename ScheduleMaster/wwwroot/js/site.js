@@ -80,12 +80,17 @@ function Login(form) {
 
 
 function Register(form) {
-    let username = form.username.value;
-    let password = form.password.value;
-    let email = form.email.value;
+    var data = new FormData();
+    data.append('username', form.username.value);
+    data.append('pwd', form.password.value);
+    data.append('email', form.email.value);
+    //let username = form.username.value;
+    //let password = form.password.value;
+    //let email = form.email.value;
 
-    console.log("Name: " + username + " Password: " + password + " E-mail: " + email);
-    alert("Welcome to our services noob!");
+    SendData("User/NewUser", data)
+
+
     registerForm.setAttribute("style", "display: none");
 }
 
@@ -105,17 +110,11 @@ function Logout() {
 };
 
 
-var data = new FormData();
-data.append('user', 'person');
-data.append('pwd', 'password');
-data.append('organization', 'place');
-data.append('requiredkey', 'key');
-
-function SendData(destination) {
+function SendData(destination, data) {
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', destination, true);
+    xhr.open('POSt', destination, true);
     xhr.onload = function () {
-        console.log(this.responseText);
+        console.log(data);
     };
     xhr.send(data);
 }
