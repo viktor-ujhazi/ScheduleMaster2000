@@ -53,8 +53,7 @@ function HideLoginPage() {
 function Login(form) {
     let username = form.username.value;
     let password = form.password.value;
-    console.log("Name: " + username + " Password: " + password);
-    alert("Welcome!");
+
     loginForm.setAttribute("style", "display: none");
 
     let headerToHide = document.querySelector("#loginHeader");
@@ -103,3 +102,19 @@ function Logout() {
     headerToShow = document.querySelector("#registerHeader");
     headerToShow.setAttribute("style", "display: unset");
 };
+
+
+var data = new FormData();
+data.append('user', 'person');
+data.append('pwd', 'password');
+data.append('organization', 'place');
+data.append('requiredkey', 'key');
+
+function SendData(destination) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', destination, true);
+    xhr.onload = function () {
+        console.log(this.responseText);
+    };
+    xhr.send(data);
+}
