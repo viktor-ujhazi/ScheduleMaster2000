@@ -1,4 +1,5 @@
 ﻿const grid = document.querySelector("#headerGrid");
+let currentProfileEmail = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     let element = document.createElement("a");
@@ -68,10 +69,10 @@ function ShowLogout() {
 
 function ShowScheduleOption() {
     element = document.createElement("a");
-    element.textContent = "Show Schedule";
+    element.textContent = "Show Schedules";
     element.setAttribute("class", "headerElement");
     element.setAttribute("id", "scheduleHeader");
-    element.addEventListener("click", SendAjaxGET);
+    element.addEventListener("click", ShowScedules);
     grid.appendChild(element);
 }
 
@@ -82,11 +83,12 @@ function Login(form) {
 
     SendData("User/Login", data);
 
-    loginForm.setAttribute("style", "display: none");
-
-    HideLoginForm();
-
-    ShowLogout();
+    if (this.responsext === "Yeah") {
+        loginForm.setAttribute("style", "display: none");
+		currentProfileEmail =  form.email.value;
+        HideLoginForm();
+        ShowLogout();
+    }
 
     //ShowScheduleOption();
 }
@@ -116,6 +118,8 @@ function Logout() {
 
     headerToShow = document.querySelector("#registerHeader");
     headerToShow.setAttribute("style", "display: unset");
+
+    currentProfileEmail = null;
 };
 
 

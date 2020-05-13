@@ -37,5 +37,18 @@ namespace ScheduleMaster.Services
 
             command.ExecuteNonQuery();
         }
+
+        public int GetUserId(string email)
+        {
+            using var command = _connection.CreateCommand();
+
+            command.CommandText = $"SELECT user_id FROM users WHERE email LIKE '{email}'";
+
+            using var reader = command.ExecuteReader();
+
+            reader.Read();
+            int userId = Convert.ToInt32(reader["user_id"]);
+            return userId;
+        }
     }
 }
