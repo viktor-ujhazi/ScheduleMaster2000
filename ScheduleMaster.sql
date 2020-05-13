@@ -42,7 +42,7 @@ CREATE TABLE slots(
 	day_id INTEGER NOT NULL REFERENCES days(day_id),
 	task_id INTEGER NOT NULL REFERENCES tasks(task_id),
 	start_slot INTEGER,
-	"length" INTEGER
+	slot_length INTEGER
 	
 );
 
@@ -71,13 +71,36 @@ INSERT INTO users (username, email, password) VALUES ('user1', 'user1@users.com'
 
 /* Create tasks for users */
 
-INSERT INTO tasks (title, "content", "user_id") VALUES ('Task 1 user1', 'content from user1', '2');
+INSERT INTO tasks (title, "content", "user_id") VALUES ('Task 1 ', 'content from admin', '1');
+INSERT INTO tasks (title, "content", "user_id") VALUES ('Task 2 ', 'another content from admin', '1');
 
 /* Create schedules and days for users */
 
 
 SELECT insert_into_schedule('Schedule Title 1', 4, 1);
+SELECT insert_into_schedule('Title 2', 2, 1);
+SELECT insert_into_schedule('Title 3', 5, 1);
+SELECT insert_into_schedule('Title 4', 1, 1);
 
+/* Create day titles */
 
+UPDATE days SET title = 'Day title 1' WHERE day_id = 1";
+UPDATE days SET title = 'Day title 2' WHERE day_id = 2";
+UPDATE days SET title = 'Day title 3' WHERE day_id = 3";
+UPDATE days SET title = 'Day title 4' WHERE day_id = 4";
+UPDATE days SET title = 'Day title 5' WHERE day_id = 5";
+UPDATE days SET title = 'Day title 6' WHERE day_id = 6";
+UPDATE days SET title = 'Day title 7' WHERE day_id = 7";
+UPDATE days SET title = 'Day title 8' WHERE day_id = 8";
+UPDATE days SET title = 'Day title 9' WHERE day_id = 9";
+UPDATE days SET title = 'Day title 10' WHERE day_id = 10";
+UPDATE days SET title = 'Day title 11' WHERE day_id = 11";
+UPDATE days SET title = 'Day title 12' WHERE day_id = 12";
+
+/* Create slots */
+
+INSERT INTO slots (schedule_id, day_id, task_id, start_slot, slot_length) VALUES (1,1,1,5,1);
+
+INSERT INTO slots (schedule_id, day_id, task_id, start_slot, slot_length) VALUES (1,2,1,12,1);
 
 
