@@ -18,29 +18,29 @@ CREATE TABLE tasks(
 	task_id SERIAL PRIMARY KEY,
 	title TEXT,
 	"content" TEXT,
-	"user_id" INTEGER NOT NULL REFERENCES "user"(user_id)
+	"user_id" INTEGER NOT NULL REFERENCES users(user_id)
 );
 
 CREATE TABLE schedules(
 	schedule_id SERIAL PRIMARY KEY,
 	title TEXT,
 	num_of_columns INTEGER CHECK (num_of_columns >0 AND num_of_columns <8),
-	"user_id" INTEGER NOT NULL REFERENCES "user"(user_id),
+	"user_id" INTEGER NOT NULL REFERENCES users(user_id),
 	"public" BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE days(
 	column_id SERIAL PRIMARY KEY,
-	schedule_id INTEGER NOT NULL REFERENCES "schedule"(schedule_id),
+	schedule_id INTEGER NOT NULL REFERENCES schedules(schedule_id),
 	title TEXT
 
 );
 
 CREATE TABLE slots(
 	slot_id SERIAL PRIMARY KEY,
-	schedule_id INTEGER NOT NULL REFERENCES "schedule"(schedule_id),
-	column_id INTEGER NOT NULL REFERENCES "column"(column_id),
-	task_id INTEGER NOT NULL REFERENCES "task"(task_id),
+	schedule_id INTEGER NOT NULL REFERENCES schedules(schedule_id),
+	column_id INTEGER NOT NULL REFERENCES days(column_id),
+	task_id INTEGER NOT NULL REFERENCES tasks(task_id),
 	start_slot INTEGER,
 	"length" INTEGER
 	
