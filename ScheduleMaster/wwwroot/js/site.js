@@ -2,7 +2,7 @@
 let currentProfileEmail = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+
     let element = document.createElement("a");
     element.textContent = "Home";
     element.setAttribute("id", "firstElement");
@@ -103,8 +103,15 @@ function Logout() {
     let headerToRemove = document.querySelector("#logoutHeader");
     grid.removeChild(headerToRemove);
 
-    headerToRemove = document.querySelector("#scheduleHeader");
-    grid.removeChild(headerToRemove);
+    let sidebar = document.querySelector(".sidenav");
+    sidebar.setAttribute("style", "display: none");
+    while (sidebar.firstChild) {
+        sidebar.removeChild(sidebar.lastChild);
+    }
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'User/Logout', true);
+    xhr.send();
 
     let headerToShow = document.querySelector("#loginHeader");
     headerToShow.setAttribute("style", "display: unset");
@@ -121,7 +128,7 @@ function SendData(destination, data) {
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                if (xhr.responseText != '"Gottcha!"') {   
+                if (xhr.responseText != 0) {
                     loginForm.setAttribute("style", "display: none");
                     HideLoginForm();
                     ShowLogout();
@@ -138,19 +145,19 @@ function SendData(destination, data) {
 }
 
 
-function SendDataToSchedule(destination, data){
+function SendDataToSchedule(destination, data) {
     let xhr = new XMLHttpRequest();
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-               console.log(xhr.responseText);   //folytat-folytat
-               let obj = JSON.parse(xhr.responseText);
+                console.log(xhr.responseText);   //folytat-folytat
+                let obj = JSON.parse(xhr.responseText);
                 //obj.value[0].title az első elem a scheduleok között
-                
-                
+
+
                 var sidebar = document.querySelector(".sidenav");
                 sidebar.setAttribute("style", "display: unset");
-                for(let i = 0; i < obj.value.length; i++){
+                for (let i = 0; i < obj.value.length; i++) {
                     let sidePoint = document.createElement("a");
                     let uniqueId = "sidebar" + obj.value[i].schedule_id;
 

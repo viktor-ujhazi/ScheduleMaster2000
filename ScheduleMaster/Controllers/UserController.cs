@@ -24,19 +24,7 @@ namespace ScheduleMaster.Controllers
             _sqlUsersService = usersService;
             _cyberSecurity = cyberSecurity;
         }
-        public IActionResult Index()
-        {
-            return Redirect($"../Home/Index");
-        }
 
-        //public ActionResult MyAjaxGET()
-        //{
-        //    string temp = Request.Query["userName"];
-
-        //    // Perform your operation  
-
-        //    return Json(temp);
-        //}
 
         [HttpPost]
         public ActionResult NewUser()
@@ -67,7 +55,7 @@ namespace ScheduleMaster.Controllers
             var email = Request.Form["email"];
             if (!_cyberSecurity.IsValidUser(email, password))
             {
-                return Json("Gottcha!");
+                return Json(0);
             }
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
@@ -91,7 +79,7 @@ namespace ScheduleMaster.Controllers
         public async Task<IActionResult> LogoutAsync()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            return Json("Logged out");
         }
     }
 }
