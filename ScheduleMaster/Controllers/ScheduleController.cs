@@ -23,8 +23,11 @@ namespace ScheduleMaster.Controllers
         }
         public ActionResult Index()
         {
+
+
+
             var resultJson = Json(_sqlScheduleService.GetAllSchedule(Convert.ToInt32(Request.Form["userid"])));
-            return Json(resultJson);
+            return resultJson;
         }
     }
 }

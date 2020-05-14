@@ -1,5 +1,6 @@
 ﻿const grid = document.querySelector("#headerGrid");
 let currentProfileEmail = null;
+let currentProfileID = null;
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -121,6 +122,7 @@ function Logout() {
     headerToShow.setAttribute("style", "display: unset");
 
     currentProfileEmail = null;
+    currentProfileID = null
 };
 
 
@@ -131,6 +133,8 @@ function SendData(destination, data) {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 if (xhr.responseText != 0) {
                     loginForm.setAttribute("style", "display: none");
+                    currentProfileID = xhr.responseText;
+
                     HideLoginForm();
                     ShowLogout();
 
@@ -146,12 +150,12 @@ function SendData(destination, data) {
     }
 }
 
-function TestSend(destination, userid) {
-    var data = new FormData();
-    data.append('userid', userid);
-    console.log(data);
-    SendDataToSchedule(destination, data);
-}
+//function TestSend(destination, userid) {
+//    var data = new FormData();
+//    data.append('userid', userid);
+//    console.log(data);
+//    SendDataToSchedule(destination, data);
+//}
 
 
 
@@ -167,19 +171,59 @@ function SendDataToSchedule(destination, data){
                 var sidebar = document.querySelector(".sidenav");
 
                 sidebar.setAttribute("style", "display: unset");
-                
-                for(let i = 0; i < obj.value.length; i++){
-                    let sidePoint = document.createElement("a");
-                    let uniqueId = "sidebar" + obj.value[i].scheduleID;
-                    let daysNum = obj.value[i].numOfDays;
-
-                    sidePoint.setAttribute("id", uniqueId);
-                    sidePoint.textContent = obj.value[i].title;
-                    sidePoint.addEventListener("click", () => {
-                        SidePointSelected(uniqueId, daysNum);
-                    })
-                    sidebar.appendChild(sidePoint);
+                while (sidebar.firstChild) {
+                    sidebar.removeChild(sidebar.lastChild);
                 }
+                let selectorbuttons = document.createElement("div");
+                let btnSchedule = document.createElement("input");
+                let btnTask = document.createElement("input");
+                btnSchedule.setAttribute("type","button");
+                btnSchedule.setAttribute("value", "Schedules");
+                
+                btnTask.setAttribute("type", "button");
+                btnTask.setAttribute("value", "Tasks");
+
+                selectorbuttons.appendChild(btnSchedule);
+                selectorbuttons.appendChild(btnTask);
+
+                sidebar.appendChild(selectorbuttons);
+                btnSchedule.addEventListener("click", () => {
+                    SendDataToSchedule("Schedule/Index", data);
+                });
+                btnTask.addEventListener("click", () => {
+                    SendDataToSchedule("Task/Index", data);
+                });
+
+                if (destination === "Schedule/Index") {
+                    for (let i = 0; i < obj.length; i++) {
+                        let sidePoint = document.createElement("a");
+                        let uniqueId = "sidebar" + obj[i].scheduleID;
+                        let daysNum = obj[i].numOfDays;
+
+                        sidePoint.setAttribute("id", uniqueId);
+                        sidePoint.textContent = obj[i].title;
+                        sidePoint.addEventListener("click", () => {
+                            SidePointSelected(uniqueId, daysNum);
+                        })
+                        sidebar.appendChild(sidePoint);
+                    }
+                }
+                if (destination === "Task/Index") {
+                    for (let i = 0; i < obj.length; i++) {
+                        let sidePoint = document.createElement("a");
+                        let uniqueId = "sidebar" + obj[i].TaskID;
+                        
+                        sidePoint.setAttribute("id", uniqueId);
+                        sidePoint.textContent = obj[i].title;
+                        sidePoint.addEventListener("click", () => {
+                            SidePointSelected(uniqueId, daysNum);
+                        })
+                        sidebar.appendChild(sidePoint);
+                    }
+                }
+
+
+
             }
         }
         xhr.open('POST', destination, true);
