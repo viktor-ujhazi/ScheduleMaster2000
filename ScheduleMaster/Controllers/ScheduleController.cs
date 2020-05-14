@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
+
 namespace ScheduleMaster.Controllers
 {
     public class ScheduleController : Controller
@@ -23,9 +24,6 @@ namespace ScheduleMaster.Controllers
         }
         public ActionResult Index()
         {
-
-
-
             var resultJson = Json(_sqlScheduleService.GetAllSchedule(Convert.ToInt32(Request.Form["userid"])));
             return resultJson;
         }
