@@ -48,7 +48,7 @@ namespace ScheduleMaster.Services
             command.CommandText = @"INSERT INTO tasks (title, content, user_id) VALUES (@title, @content, @user_id)";
             command.Parameters.Add(titleParam);
             command.Parameters.Add(contentParam);
-            command.Parameters.Add(contentParam);
+            command.Parameters.Add(userIDParam);
 
             command.ExecuteNonQuery();
         }

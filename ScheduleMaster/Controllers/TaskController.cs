@@ -21,6 +21,17 @@ namespace ScheduleMaster.Controllers
             return resultJson;
         }
 
+        public IActionResult AddTask()
+        {
+            var title = Request.Form["title"];
+            var content = Request.Form["content"];
+            var userId = Convert.ToInt32(Request.Form["userID"]);
+
+            _sqlTaskService.AddTask(title, content, userId);
+
+            return Json(_sqlTaskService.GetAllTask(userId));
+        }
+
         public ActionResult UpdateTask()
         {
 

@@ -5,8 +5,9 @@
         <form id="loginForm" method="POST" style="display: none">
             Email: <br />
             <input type="text" name="email" value=""><p>
-            Password: <br />
-            <input type="text" name="password" value=""><p />
+                Password: <br />
+                <input type="text" name="password" value="">
+            <p />
 
             <input type="button" name="button" value="Login" onClick="Login(this.form)">
         </form>
@@ -18,8 +19,23 @@
             <input type="text" name="password" value=""><p />
             E-mail adress: <br />
             <input type="text" name="email" value=""><p />
-
             <input type="button" name="button" value="Create" onClick="Register(this.form)">
+        </form>
+
+        <form id="scheduleForm" method="POST" style="display: none">
+            Number of day(s)(1-7) <br>
+            <input type="text" name="numOfDays" value=""><p />
+            Title of schedule: <br>
+            <input type="text" name="title" value=""><p />
+            <input type="button" name="button" value="Create" onClick="CreateSchedules(this.form)">
+        </form>
+
+        <form id="taskForm" method="POST" style="display: none">
+            Content <br>
+            <input type="text" name="content" value=""><p />
+            Title of task: <br>
+            <input type="text" name="title" value=""><p />
+            <input type="button" name="button" value="Create" onClick="CreateTasks(this.form)">
         </form>
 
         <div class="sidenav" id="scheduleSidenav" style="display: none">
