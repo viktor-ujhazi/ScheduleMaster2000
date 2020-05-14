@@ -336,7 +336,7 @@ function SendDataToSchedule(destination, data) {
 
                     let obj = JSON.parse(xhr.responseText);
                     let dayList = [];
-                    let dayIdList = [];
+                    let dayIdList = [];     //aktuális day-ek ID-ját tárolja
 
                     for(let i = 0; i < obj.length; i++){
                         dayList.push(obj[i].title);
@@ -353,7 +353,7 @@ function SendDataToSchedule(destination, data) {
                                     tableCell.textContent = "Time";
                                     tableCell.setAttribute("class", "tableCell");
                                 }else{
-                                    tableCell.textContent = dayList[day-1];
+                                    tableCell.textContent = dayList[day-1];     //day titlejét írja ki az ARRAY-ből
                                     tableCell.setAttribute("class", "tableCell");
                                 }
                                 tableRow.appendChild(tableCell);
@@ -362,7 +362,7 @@ function SendDataToSchedule(destination, data) {
                             var data2 = new FormData();
                             data2.append('dayIds', dayIdList);
 
-                            SendDataToSlot("Slot/Index", data2, scheduleTable, numOfDays);   //ITT JÁR
+                            SendDataToSlot("Slot/Index", data2, scheduleTable, numOfDays);   //Itt küldi át az id-kat a slot controllerbe
                         }
 
                         scheduleTable.appendChild(tableRow);
@@ -382,14 +382,11 @@ function SendDataToSchedule(destination, data) {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     console.log(xhr.responseText);
 
-                    let obj = JSON.parse(xhr.responseText);
-                    let obj2=JSON.parse(obj);
-                    console.log(obj2[1]);
+                    let obj = JSON.parse(JSON.parse(xhr.responseText));     //itt van a dictionary
+
                     let dayList = [];
 
-
                     for(let day = 0; day < numOfDays+1; day++){
-                        //toDo for days             ÁTÍRNIIIIIII
                         let tableCell = document.createElement("td");
     
                         if(day === 0){
@@ -398,7 +395,7 @@ function SendDataToSchedule(destination, data) {
                             let cellId = "tableCell" + day + "_" + hour;
                             tableCell.setAttribute("id", cellId);
                         }else{
-                            tableCell.textContent = "toDo " + day;
+                            tableCell.textContent = "toDo " + day;      //itt kéne a taskek titljét kiírni
                             tableCell.setAttribute("class", "tableCell");
                             let cellId = "tableCell" + day + "_" + hour;
                             tableCell.setAttribute("id", cellId);
