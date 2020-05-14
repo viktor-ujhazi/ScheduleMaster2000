@@ -2,7 +2,7 @@
 let currentProfileEmail = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+
     let element = document.createElement("a");
     element.textContent = "Home";
     element.setAttribute("id", "firstElement");
@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     element.setAttribute("id", "registerHeader");
     element.addEventListener("click", RegisterPage);
     grid.appendChild(element);
+        
 });
 
 
@@ -103,8 +104,15 @@ function Logout() {
     let headerToRemove = document.querySelector("#logoutHeader");
     grid.removeChild(headerToRemove);
 
-    headerToRemove = document.querySelector("#scheduleHeader");
-    grid.removeChild(headerToRemove);
+    let sidebar = document.querySelector(".sidenav");
+    sidebar.setAttribute("style", "display: none");
+    while (sidebar.firstChild) {
+        sidebar.removeChild(sidebar.lastChild);
+    }
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'User/Logout', true);
+    xhr.send();
 
     let headerToShow = document.querySelector("#loginHeader");
     headerToShow.setAttribute("style", "display: unset");
@@ -121,13 +129,14 @@ function SendData(destination, data) {
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                if (xhr.responseText != '"Gottcha!"') {   
+                if (xhr.responseText != 0) {
                     loginForm.setAttribute("style", "display: none");
                     HideLoginForm();
                     ShowLogout();
 
                     var data = new FormData();
                     data.append('userid', xhr.responseText);
+                    console.log(data);
                     SendDataToSchedule("Schedule/Index", data);
                 }
             }
@@ -136,6 +145,14 @@ function SendData(destination, data) {
         xhr.send(data);
     }
 }
+
+function TestSend(destination, userid) {
+    var data = new FormData();
+    data.append('userid', userid);
+    console.log(data);
+    SendDataToSchedule(destination, data);
+}
+
 
 
 function SendDataToSchedule(destination, data){
@@ -146,11 +163,11 @@ function SendDataToSchedule(destination, data){
                console.log(xhr.responseText);   //TO DELETE
                let obj = JSON.parse(xhr.responseText);
                 //obj.value[0].title az első elem a scheduleok között
-                
-                
+
                 var sidebar = document.querySelector(".sidenav");
 
                 sidebar.setAttribute("style", "display: unset");
+                
                 for(let i = 0; i < obj.value.length; i++){
                     let sidePoint = document.createElement("a");
                     let uniqueId = "sidebar" + obj.value[i].scheduleID;
@@ -168,6 +185,7 @@ function SendDataToSchedule(destination, data){
         xhr.open('POST', destination, true);
         xhr.send(data);
     }
+
 }
 
     function SidePointSelected(uncutId, numOfDays){
