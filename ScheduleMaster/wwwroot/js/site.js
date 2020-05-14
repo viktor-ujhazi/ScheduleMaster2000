@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     element.setAttribute("id", "registerHeader");
     element.addEventListener("click", RegisterPage);
     grid.appendChild(element);
+        
 });
 
 
@@ -135,6 +136,7 @@ function SendData(destination, data) {
 
                     var data = new FormData();
                     data.append('userid', xhr.responseText);
+                    console.log(data);
                     SendDataToSchedule("Schedule/Index", data);
                 }
             }
@@ -144,8 +146,16 @@ function SendData(destination, data) {
     }
 }
 
+function TestSend(destination, userid) {
+    var data = new FormData();
+    data.append('userid', userid);
+    console.log(data);
+    SendDataToSchedule(destination, data);
+}
 
-function SendDataToSchedule(destination, data) {
+
+
+function SendDataToSchedule(destination, data){
     let xhr = new XMLHttpRequest();
     if (xhr != null) {
         xhr.onreadystatechange = function () {
@@ -157,13 +167,16 @@ function SendDataToSchedule(destination, data) {
 
                 var sidebar = document.querySelector(".sidenav");
                 sidebar.setAttribute("style", "display: unset");
-                for (let i = 0; i < obj.value.length; i++) {
+                
+                for(let i = 0; i < obj.value.length; i++){
                     let sidePoint = document.createElement("a");
-                    let uniqueId = "sidebar" + obj.value[i].schedule_id;
+                    let uniqueId = "sidebar" + obj.value[i].scheduleID;
 
                     sidePoint.setAttribute("id", uniqueId);
                     sidePoint.textContent = obj.value[i].title;
-
+                    // sidePoint.addEventListener("click", () => {
+                    //     SidePointSelected(uniqueId);
+                    // })
                     sidebar.appendChild(sidePoint);
                 }
 
@@ -173,4 +186,9 @@ function SendDataToSchedule(destination, data) {
         xhr.open('POST', destination, true);
         xhr.send(data);
     }
+
 }
+
+    // function SidePointSelected(uncutId){
+    //     Console.log(uncutId.substring(7, uncutId.length));
+    // }

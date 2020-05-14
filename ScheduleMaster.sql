@@ -84,18 +84,18 @@ SELECT insert_into_schedule('Title 4', 1, 1);
 
 /* Create day titles */
 
-UPDATE days SET title = 'Day title 1' WHERE day_id = 1";
-UPDATE days SET title = 'Day title 2' WHERE day_id = 2";
-UPDATE days SET title = 'Day title 3' WHERE day_id = 3";
-UPDATE days SET title = 'Day title 4' WHERE day_id = 4";
-UPDATE days SET title = 'Day title 5' WHERE day_id = 5";
-UPDATE days SET title = 'Day title 6' WHERE day_id = 6";
-UPDATE days SET title = 'Day title 7' WHERE day_id = 7";
-UPDATE days SET title = 'Day title 8' WHERE day_id = 8";
-UPDATE days SET title = 'Day title 9' WHERE day_id = 9";
-UPDATE days SET title = 'Day title 10' WHERE day_id = 10";
-UPDATE days SET title = 'Day title 11' WHERE day_id = 11";
-UPDATE days SET title = 'Day title 12' WHERE day_id = 12";
+UPDATE days SET title = 'Day title 1' WHERE day_id = 1;
+UPDATE days SET title = 'Day title 2' WHERE day_id = 2;
+UPDATE days SET title = 'Day title 3' WHERE day_id = 3;
+UPDATE days SET title = 'Day title 4' WHERE day_id = 4;
+UPDATE days SET title = 'Day title 5' WHERE day_id = 5;
+UPDATE days SET title = 'Day title 6' WHERE day_id = 6;
+UPDATE days SET title = 'Day title 7' WHERE day_id = 7;
+UPDATE days SET title = 'Day title 8' WHERE day_id = 8;
+UPDATE days SET title = 'Day title 9' WHERE day_id = 9;
+UPDATE days SET title = 'Day title 10' WHERE day_id = 10;
+UPDATE days SET title = 'Day title 11' WHERE day_id = 11;
+UPDATE days SET title = 'Day title 12' WHERE day_id = 12;
 
 /* Create slots */
 
