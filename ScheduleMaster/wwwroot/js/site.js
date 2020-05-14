@@ -192,7 +192,12 @@ function SendDataToSchedule(destination, data){
         let scheduleId = uncutId.slice(7);
         let scheduleTable = document.querySelector("#ScheduleTable");
 
+        while (scheduleTable.firstChild) {
+            scheduleTable.removeChild(scheduleTable.lastChild);
+        }
+
         scheduleTable.setAttribute("style","display: unset");
+        scheduleTable.setAttribute("style", "content: none");
 
         for(let hour = 0; hour < 25; hour++){
             let tableRow = document.createElement("tr");
