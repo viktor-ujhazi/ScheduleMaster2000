@@ -84,7 +84,7 @@ function Login(form) {
     data.append('pwd', form.password.value);
     data.append('email', form.email.value);
 
-    SendData("User/Login", data);
+    SendDataToLogin("User/Login", data);
     //ShowScheduleOption();
 }
 
@@ -95,7 +95,7 @@ function Register(form) {
     data.append('pwd', form.password.value);
     data.append('email', form.email.value);
 
-    SendData("User/NewUser", data);
+    SendDataToRegister("User/NewUser", data);
 
     registerForm.setAttribute("style", "display: none");
 }
@@ -126,12 +126,12 @@ function Logout() {
 };
 
 
-function SendData(destination, data) {
+function SendDataToLogin(destination, data) {
     let xhr = new XMLHttpRequest();
     if (xhr != null) {
         xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                if (xhr.responseText != 0) {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.responseText !== 0) {
                     loginForm.setAttribute("style", "display: none");
                     currentProfileID = xhr.responseText;
 
@@ -150,12 +150,26 @@ function SendData(destination, data) {
     }
 }
 
-//function TestSend(destination, userid) {
-//    var data = new FormData();
-//    data.append('userid', userid);
-//    console.log(data);
-//    SendDataToSchedule(destination, data);
-//}
+
+
+function SendDataToRegister(destination, data) {
+    let xhr = new XMLHttpRequest();
+    if (xhr != null) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText);
+                if(xhr.responseText != '"Success!"'){
+                    
+                    RegisterPage();
+                }else{
+                    LoginPage();
+                }   
+            }
+        }
+        xhr.open('POST', destination, true);
+        xhr.send(data);
+    }
+}
 
 function SendDataToSchedule(destination, data) {
     let xhr = new XMLHttpRequest();
