@@ -254,9 +254,11 @@ function SendDataToSchedule(destination, data) {
 
                     let obj = JSON.parse(xhr.responseText);
                     let dayList = [];
+                    let dayIdList = [];
 
                     for(let i = 0; i < obj.length; i++){
                         dayList.push(obj[i].title);
+                        dayIdList.push(obj[i].dayID)
                     }
 
                     for(let hour = 0; hour < 25; hour++){
@@ -267,28 +269,20 @@ function SendDataToSchedule(destination, data) {
             
                                 if(day === 0){
                                     tableCell.textContent = "Time";
-                                    tableCell.setAttribute("id", "tableCell");
+                                    tableCell.setAttribute("class", "tableCell");
                                 }else{
                                     tableCell.textContent = dayList[day-1];
-                                    tableCell.setAttribute("id", "tableCell");
+                                    tableCell.setAttribute("class", "tableCell");
                                 }
                                 tableRow.appendChild(tableCell);
                             }    
                         }else{
-                            for(let day = 0; day < numOfDays+1; day++){
-                                //toDo for days             ÁTÍRNIIIIIII
-                                let tableCell = document.createElement("td");
-            
-                                if(day === 0){
-                                    tableCell.textContent = hour +" h";
-                                    tableCell.setAttribute("id", "tableCell");
-                                }else{
-                                    tableCell.textContent = "toDo " + day;
-                                    tableCell.setAttribute("id", "tableCell");
-                            }
-                                tableRow.appendChild(tableCell);
-                            }
+                            var data2 = new FormData();
+                            data2.append('dayIds', dayIdList);
+
+                            SendDataToSlot("Slot/Index", data2, scheduleTable, numOfDays);   //ITT JÁR
                         }
+
                         scheduleTable.appendChild(tableRow);
                     }
                 }
@@ -297,6 +291,46 @@ function SendDataToSchedule(destination, data) {
             xhr.send(data);
         }
     }
+
+
+    function SendDataToSlot(destination, data, scheduleTable, numOfDays){
+        let xhr = new XMLHttpRequest();
+        if (xhr != null) {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+
+                    let obj = JSON.parse(xhr.responseText);
+                    let obj2=JSON.parse(obj);
+                    console.log(obj2[1]);
+                    let dayList = [];
+
+
+                    for(let day = 0; day < numOfDays+1; day++){
+                        //toDo for days             ÁTÍRNIIIIIII
+                        let tableCell = document.createElement("td");
+    
+                        if(day === 0){
+                            tableCell.textContent = hour +" h";
+                            tableCell.setAttribute("class", "tableCell");
+                            let cellId = "tableCell" + day + "_" + hour;
+                            tableCell.setAttribute("id", cellId);
+                        }else{
+                            tableCell.textContent = "toDo " + day;
+                            tableCell.setAttribute("class", "tableCell");
+                            let cellId = "tableCell" + day + "_" + hour;
+                            tableCell.setAttribute("id", cellId);
+                    }
+                        tableRow.appendChild(tableCell);
+                    }
+
+                }
+            }
+            xhr.open('POST', destination, true);
+            xhr.send(data);
+        }
+    }
+
 
 
 

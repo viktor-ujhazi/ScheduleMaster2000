@@ -60,7 +60,7 @@
     height: 600px;
   }
 
-  #tableCell{
+  .tableCell{
     border: solid;
     width: 100px;
     text-align: center;
