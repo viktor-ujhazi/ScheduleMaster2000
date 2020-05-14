@@ -10,5 +10,6 @@ namespace ScheduleMaster.Services
         List<SlotModel> GetAllSlot(int scheduleID);
         SlotModel GetSlot(int id);
         void UpdateSlot(int slotID, int dayID, int taskID, int startSlot, int slotLength);
+        public List<SlotModel> GetAllSlotByDayId(int dayID);
     }
 }

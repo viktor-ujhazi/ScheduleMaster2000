@@ -156,5 +156,21 @@ namespace ScheduleMaster.Services
 
             command.ExecuteNonQuery();
         }
+
+
+        public List<SlotModel> GetAllSlotByDayId(int dayID)
+        {
+            using var command = _connection.CreateCommand();
+            command.CommandText = $"SELECT * FROM slots WHERE day_id = {dayID}";
+
+            using var reader = command.ExecuteReader();
+
+            List<SlotModel> slots = new List<SlotModel>();
+            while (reader.Read())
+            {
+                slots.Add(SlotModelFromData(reader));
+            }
+            return slots;
+        }
     }
 }

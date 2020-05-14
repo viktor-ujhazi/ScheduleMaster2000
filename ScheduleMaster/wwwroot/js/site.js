@@ -297,17 +297,28 @@ function SendDataToSchedule(destination, data) {
                         })
                     }
                 }
-                if (destination === "Task/Index" || destination === 'Task/AddTask') {
+                if (destination === "Task/Index" || destination === 'Task/AddTask' || destination === "Task/UpdateTask") {
+               
                     for (let i = 0; i < obj.length; i++) {
                         let sidePoint = document.createElement("a");
                         let uniqueId = "sidebar" + obj[i].TaskID;
 
+                        console.log(obj)
+
+                        let tID = obj[i].taskID;
+                        let title = obj[i].title;
+                        let taskContent = obj[i].content;
+                        let userID = obj[i].userID;
+                        
                         sidePoint.setAttribute("id", uniqueId);
                         sidePoint.textContent = obj[i].title;
-                        sidePoint.addEventListener("click", () => {
-                            SidePointSelected(uniqueId, daysNum);
-                        })
+                        //sidePoint.addEventListener("click", () => {
+                        //    SidePointSelected(uniqueId, daysNum);
+                        //})
                         sidebar.appendChild(sidePoint);
+                        sidePoint.addEventListener("dblclick", () => {
+                            EditTask(tID, title, taskContent, userID);
+                        })
                     }
                 }
 
@@ -329,57 +340,90 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 console.log(xhr.responseText);
 
-                let obj = JSON.parse(xhr.responseText);
-                let dayList = [];
+                    let obj = JSON.parse(xhr.responseText);
+                    let dayList = [];
+                    let dayIdList = [];     //aktuális day-ek ID-ját tárolja
 
-                for (let i = 0; i < obj.length; i++) {
-                    dayList.push(obj[i].title);
-                }
-
-                for (let hour = 0; hour < 25; hour++) {
-                    let tableRow = document.createElement("tr");
-                    if (hour === 0) {
-                        for (let day = 0; day < numOfDays + 1; day++) {
-                            let tableCell = document.createElement("td");
-
-                            if (day === 0) {
-                                tableCell.textContent = "Time";
-                                tableCell.setAttribute("id", "tableCell");
-                            } else {
-                                tableCell.textContent = dayList[day - 1];
-                                tableCell.setAttribute("id", "tableCell");
-                            }
-                            tableRow.appendChild(tableCell);
-                        }
-                    } else {
-                        for (let day = 0; day < numOfDays + 1; day++) {
-                            //toDo for days             ÁTÍRNIIIIIII
-                            let tableCell = document.createElement("td");
-
-                            if (day === 0) {
-                                tableCell.textContent = hour + " h";
-                                tableCell.setAttribute("id", "tableCell");
-                            } else {
-                                tableCell.textContent = "toDo " + day;
-                                tableCell.setAttribute("id", "tableCell");
-                            }
-                            tableRow.appendChild(tableCell);
-                        }
+                    for(let i = 0; i < obj.length; i++){
+                        dayList.push(obj[i].title);
+                        dayIdList.push(obj[i].dayID)
                     }
-                    scheduleTable.appendChild(tableRow);
+
+                    for(let hour = 0; hour < 25; hour++){
+                        let tableRow = document.createElement("tr");
+                        if(hour === 0){
+                            for(let day = 0; day < numOfDays+1; day++){
+                                let tableCell = document.createElement("td");
+            
+                                if(day === 0){
+                                    tableCell.textContent = "Time";
+                                    tableCell.setAttribute("class", "tableCell");
+                                }else{
+                                    tableCell.textContent = dayList[day-1];     //day titlejét írja ki az ARRAY-ből
+                                    tableCell.setAttribute("class", "tableCell");
+                                }
+                                tableRow.appendChild(tableCell);
+                            }    
+                        }else{
+                            var data2 = new FormData();
+                            data2.append('dayIds', dayIdList);
+
+                            SendDataToSlot("Slot/Index", data2, scheduleTable, numOfDays);   //Itt küldi át az id-kat a slot controllerbe
+                        }
+
+                        scheduleTable.appendChild(tableRow);
+                    }
                 }
             }
+            xhr.open('POST', destination, true);
+            xhr.send(data);
         }
-        xhr.open('POST', destination, true);
-        xhr.send(data);
     }
-}
+
+
+    function SendDataToSlot(destination, data, scheduleTable, numOfDays){
+        let xhr = new XMLHttpRequest();
+        if (xhr != null) {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+
+                    let obj = JSON.parse(JSON.parse(xhr.responseText));     //itt van a dictionary
+
+                    let dayList = [];
+
+                    for(let day = 0; day < numOfDays+1; day++){
+                        let tableCell = document.createElement("td");
+    
+                        if(day === 0){
+                            tableCell.textContent = hour +" h";
+                            tableCell.setAttribute("class", "tableCell");
+                            let cellId = "tableCell" + day + "_" + hour;
+                            tableCell.setAttribute("id", cellId);
+                        }else{
+                            tableCell.textContent = "toDo " + day;      //itt kéne a taskek titljét kiírni
+                            tableCell.setAttribute("class", "tableCell");
+                            let cellId = "tableCell" + day + "_" + hour;
+                            tableCell.setAttribute("id", cellId);
+                    }
+                        tableRow.appendChild(tableCell);
+                    }
+
+                }
+            }
+            xhr.open('POST', destination, true);
+            xhr.send(data);
+        }
+    }
 
 
 
-function SidePointSelected(uncutId, numOfDays) {
-    let scheduleId = uncutId.slice(7);
-    let scheduleTable = document.querySelector("#ScheduleTable");
+
+
+
+    function SidePointSelected(uncutId, numOfDays){
+        let scheduleId = uncutId.slice(7);
+        let scheduleTable = document.querySelector("#ScheduleTable");
 
     while (scheduleTable.firstChild) {
         scheduleTable.removeChild(scheduleTable.lastChild);
@@ -408,4 +452,21 @@ function EditSchedule(sID, title, daysNum, userID, isPublic) {
     data.append('isPublic', ScheduleIsPublic);
 
     SendDataToSchedule('Schedule/UpdateSchedule', data);
+}
+
+function EditTask(tID, title, taskContent, userID) {
+
+    console.log(tID);
+    var taskTitle = prompt("Please enter the title", title);
+    var taskCont = prompt("Please enter the task content", taskContent);
+    
+
+    var data = new FormData();
+    data.append('taskID', tID);
+    data.append('title', taskTitle);
+    data.append('content', taskCont);
+    data.append('userID', userID);
+    console.log(data);
+
+    SendDataToSchedule('Task/UpdateTask', data);
 }
