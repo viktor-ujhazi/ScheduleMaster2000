@@ -23,10 +23,19 @@ namespace ScheduleMaster.Controllers
         }
         public ActionResult Index()
         {
-
-
-
             var resultJson = Json(_sqlScheduleService.GetAllSchedule(Convert.ToInt32(Request.Form["userid"])));
+            return resultJson;
+        }
+
+        public ActionResult AddSchedule()
+        {
+            var title = Request.Form["title"];
+            var duration = Convert.ToInt32(Request.Form["numOfDays"]);
+            var userId = Convert.ToInt32(Request.Form["userID"]);
+
+            _sqlScheduleService.AddSchedule(title, duration, userId);
+
+            var resultJson = Json(_sqlScheduleService.GetAllSchedule(userId));
             return resultJson;
         }
     }
