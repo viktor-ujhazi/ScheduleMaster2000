@@ -268,11 +268,17 @@ function SendDataToSchedule(destination, data) {
                     SendDataToSchedule("Task/Index", data);
                 });
 
-                if (destination === "Schedule/Index" || destination === 'Schedule/AddSchedule') {
+                if (destination === "Schedule/Index" || destination === "Schedule/UpdateSchedule" || destination === 'Schedule/AddSchedule') {
                     for (let i = 0; i < obj.length; i++) {
                         let sidePoint = document.createElement("a");
                         let uniqueId = "sidebar" + obj[i].scheduleID;
+
+
+                        let sID = obj[i].scheduleID;
+                        let title = obj[i].title;
                         let daysNum = obj[i].numOfDays;
+                        let userID = obj[i].userID;
+                        let isPublic = obj[i].isPublic;
 
                         sidePoint.setAttribute("id", uniqueId);
                         sidePoint.textContent = obj[i].title;
@@ -280,6 +286,9 @@ function SendDataToSchedule(destination, data) {
                             SidePointSelected(uniqueId, daysNum);
                         })
                         sidebar.appendChild(sidePoint);
+                        sidePoint.addEventListener("dblclick", () => {
+                            EditSchedule(sID, title, daysNum, userID, isPublic);
+                        })
                     }
                 }
                 if (destination === "Task/Index" || destination === 'Task/AddTask') {
@@ -306,49 +315,93 @@ function SendDataToSchedule(destination, data) {
 
 }
 
-function SidePointSelected(uncutId, numOfDays) {
-    let scheduleId = uncutId.slice(7);
-    let scheduleTable = document.querySelector("#ScheduleTable");
 
-    while (scheduleTable.firstChild) {
-        scheduleTable.removeChild(scheduleTable.lastChild);
-    }
+    function SendDataToDay(destination, data, scheduleTable, numOfDays) {
+        let xhr = new XMLHttpRequest();
+        if (xhr != null) {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
 
-    scheduleTable.setAttribute("style", "display: unset");
-    scheduleTable.setAttribute("style", "content: none");
+                    let obj = JSON.parse(xhr.responseText);
+                    let dayList = [];
 
-    for (let hour = 0; hour < 25; hour++) {
-        let tableRow = document.createElement("tr");
-        if (hour === 0) {
-            for (let day = 0; day < numOfDays + 1; day++) {
-                //titles for days           ÁTÍRNIIIIIII
-                let tableCell = document.createElement("td");
+                    for(let i = 0; i < obj.length; i++){
+                        dayList.push(obj[i].title);
+                    }
 
-                if (day === 0) {
-                    tableCell.textContent = "Time";
-                    tableCell.setAttribute("id", "tableCell");
-                } else {
-                    tableCell.textContent = "day " + day;
-                    tableCell.setAttribute("id", "tableCell");
+                    for(let hour = 0; hour < 25; hour++){
+                        let tableRow = document.createElement("tr");
+                        if(hour === 0){
+                            for(let day = 0; day < numOfDays+1; day++){
+                                let tableCell = document.createElement("td");
+            
+                                if(day === 0){
+                                    tableCell.textContent = "Time";
+                                    tableCell.setAttribute("id", "tableCell");
+                                }else{
+                                    tableCell.textContent = dayList[day-1];
+                                    tableCell.setAttribute("id", "tableCell");
+                                }
+                                tableRow.appendChild(tableCell);
+                            }    
+                        }else{
+                            for(let day = 0; day < numOfDays+1; day++){
+                                //toDo for days             ÁTÍRNIIIIIII
+                                let tableCell = document.createElement("td");
+            
+                                if(day === 0){
+                                    tableCell.textContent = hour +" h";
+                                    tableCell.setAttribute("id", "tableCell");
+                                }else{
+                                    tableCell.textContent = "toDo " + day;
+                                    tableCell.setAttribute("id", "tableCell");
+                            }
+                                tableRow.appendChild(tableCell);
+                            }
+                        }
+                        scheduleTable.appendChild(tableRow);
+                    }
                 }
-                tableRow.appendChild(tableCell);
             }
-        } else {
-            for (let day = 0; day < numOfDays + 1; day++) {
-                //toDo for days             ÁTÍRNIIIIIII
-                let tableCell = document.createElement("td");
-
-                if (day === 0) {
-                    tableCell.textContent = hour + " h";
-                    tableCell.setAttribute("id", "tableCell");
-                } else {
-                    tableCell.textContent = "toDo " + day;
-                    tableCell.setAttribute("id", "tableCell");
-                }
-                tableRow.appendChild(tableCell);
-            }
+            xhr.open('POST', destination, true);
+            xhr.send(data);
         }
-        scheduleTable.appendChild(tableRow);
     }
-}
 
+
+
+
+
+    function SidePointSelected(uncutId, numOfDays){
+        let scheduleId = uncutId.slice(7);
+        let scheduleTable = document.querySelector("#ScheduleTable");
+
+        while (scheduleTable.firstChild) {
+            scheduleTable.removeChild(scheduleTable.lastChild);
+        }
+
+        scheduleTable.setAttribute("style","display: unset");
+        scheduleTable.setAttribute("style", "content: none");
+
+
+        var data = new FormData();
+        data.append('scheduleId', scheduleId);
+        SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
+    }
+
+function EditSchedule(sID, title, daysNum, userID, isPublic) {
+
+    var scheduleTitle = prompt("Please enter the title", title);
+    var ScheduleNumOfDays = prompt("Please the number of days", daysNum);
+    var ScheduleIsPublic = prompt("Please enter your name", isPublic);
+
+    var data = new FormData();
+    data.append('scheduleID', sID);
+    data.append('title', scheduleTitle);
+    data.append('numOfDays', ScheduleNumOfDays);
+    data.append('userID', userID);
+    data.append('isPublic', ScheduleIsPublic);
+
+    SendDataToSchedule('Schedule/UpdateSchedule', data);
+}
