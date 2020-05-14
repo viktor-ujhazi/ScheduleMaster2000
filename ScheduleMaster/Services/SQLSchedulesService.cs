@@ -63,6 +63,7 @@ namespace ScheduleMaster.Services
             param.ParameterName = "schedules_id";
             param.Value = id;
 
+            command.Parameters.Add(param);
             using var reader = command.ExecuteReader();
             reader.Read();
             return ScheduleModelFromData(reader);
@@ -72,11 +73,12 @@ namespace ScheduleMaster.Services
         {
             using var command = _connection.CreateCommand();
             command.CommandText = "SELECT * FROM schedules WHERE user_id = @user_id";
-
+            
             var param = command.CreateParameter();
             param.ParameterName = "user_id";
             param.Value = userID;
 
+            command.Parameters.Add(param);
             using var reader = command.ExecuteReader();
 
             List<ScheduleModel> schedules = new List<ScheduleModel>();

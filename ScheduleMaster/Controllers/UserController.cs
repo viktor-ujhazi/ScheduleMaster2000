@@ -83,7 +83,6 @@ namespace ScheduleMaster.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
-
             return Json(_sqlUsersService.GetUserId(email));
         }
 
