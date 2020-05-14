@@ -43,7 +43,7 @@ namespace ScheduleMaster.Controllers
                 return Json("Email address already taken!");
             }
 
-            return Json("Sucess!");
+            return Json("Success!");
         }
 
 
