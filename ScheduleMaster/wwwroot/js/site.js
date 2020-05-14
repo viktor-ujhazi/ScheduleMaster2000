@@ -152,11 +152,13 @@ function SendDataToSchedule(destination, data){
                 sidebar.setAttribute("style", "display: unset");
                 for(let i = 0; i < obj.value.length; i++){
                     let sidePoint = document.createElement("a");
-                    let uniqueId = "sidebar" + obj.value[i].schedule_id;
+                    let uniqueId = "sidebar" + obj.value[i].scheduleID;
 
                     sidePoint.setAttribute("id", uniqueId);
                     sidePoint.textContent = obj.value[i].title;
-
+                    // sidePoint.addEventListener("click", () => {
+                    //     SidePointSelected(uniqueId);
+                    // })
                     sidebar.appendChild(sidePoint);
                 }
 
@@ -167,3 +169,7 @@ function SendDataToSchedule(destination, data){
         xhr.send(data);
     }
 }
+
+    // function SidePointSelected(uncutId){
+    //     Console.log(uncutId.substring(7, uncutId.length));
+    // }
