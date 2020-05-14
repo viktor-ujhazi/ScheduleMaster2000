@@ -143,26 +143,26 @@ function SendDataToSchedule(destination, data){
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-               console.log(xhr.responseText);   //folytat-folytat
+               console.log(xhr.responseText);   //TO DELETE
                let obj = JSON.parse(xhr.responseText);
                 //obj.value[0].title az első elem a scheduleok között
                 
                 
                 var sidebar = document.querySelector(".sidenav");
+
                 sidebar.setAttribute("style", "display: unset");
                 for(let i = 0; i < obj.value.length; i++){
                     let sidePoint = document.createElement("a");
                     let uniqueId = "sidebar" + obj.value[i].scheduleID;
+                    let daysNum = obj.value[i].numOfDays;
 
                     sidePoint.setAttribute("id", uniqueId);
                     sidePoint.textContent = obj.value[i].title;
-                    // sidePoint.addEventListener("click", () => {
-                    //     SidePointSelected(uniqueId);
-                    // })
+                    sidePoint.addEventListener("click", () => {
+                        SidePointSelected(uniqueId, daysNum);
+                    })
                     sidebar.appendChild(sidePoint);
                 }
-
-                //admin@admin.com
             }
         }
         xhr.open('POST', destination, true);
@@ -170,6 +170,44 @@ function SendDataToSchedule(destination, data){
     }
 }
 
-    // function SidePointSelected(uncutId){
-    //     Console.log(uncutId.substring(7, uncutId.length));
-    // }
+    function SidePointSelected(uncutId, numOfDays){
+        let scheduleId = uncutId.slice(7);
+        let scheduleTable = document.querySelector("#ScheduleTable");
+
+        scheduleTable.setAttribute("style","display: unset");
+
+        for(let hour = 0; hour < 25; hour++){
+            let tableRow = document.createElement("tr");
+            if(hour === 0){
+                for(let day = 0; day < numOfDays+1; day++){
+                    //titles for days           ÁTÍRNIIIIIII
+                    let tableCell = document.createElement("td");
+
+                    if(day === 0){
+                        tableCell.textContent = "Time";
+                        tableCell.setAttribute("id", "tableCell");
+                    }else{
+                        tableCell.textContent = "day " + day;
+                        tableCell.setAttribute("id", "tableCell");
+                    }
+                    tableRow.appendChild(tableCell);
+                }    
+            }else{
+                for(let day = 0; day < numOfDays+1; day++){
+                    //toDo for days             ÁTÍRNIIIIIII
+                    let tableCell = document.createElement("td");
+
+                    if(day === 0){
+                        tableCell.textContent = hour +" h";
+                        tableCell.setAttribute("id", "tableCell");
+                    }else{
+                        tableCell.textContent = "toDo " + day;
+                        tableCell.setAttribute("id", "tableCell");
+                }
+                    tableRow.appendChild(tableCell);
+                }
+            }
+            scheduleTable.appendChild(tableRow);
+        }
+    }
+

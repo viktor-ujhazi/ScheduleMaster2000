@@ -52,3 +52,15 @@
     font-size: 28px; /* Increased text to enable scrolling */
     padding: 0px 10px;
   }
+
+
+  #ScheduleTable{
+    left: 200px;
+    position: relative
+  }
+
+  #tableCell{
+    border: solid;
+    width: 100px;
+    text-align: center;
+  }
