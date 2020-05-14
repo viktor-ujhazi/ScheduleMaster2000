@@ -157,9 +157,7 @@ function SendData(destination, data) {
 //    SendDataToSchedule(destination, data);
 //}
 
-
-
-function SendDataToSchedule(destination, data){
+function SendDataToSchedule(destination, data) {
     let xhr = new XMLHttpRequest();
     if (xhr != null) {
         xhr.onreadystatechange = function () {
