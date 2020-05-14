@@ -61,6 +61,7 @@ namespace ScheduleMaster.Services
             param.ParameterName = "task_id";
             param.Value = id;
 
+            command.Parameters.Add(param);
             using var reader = command.ExecuteReader();
             reader.Read();
             return TaskModelFromData(reader);
@@ -75,6 +76,7 @@ namespace ScheduleMaster.Services
             param.ParameterName = "user_id";
             param.Value = userID;
 
+            command.Parameters.Add(param);
             using var reader = command.ExecuteReader();
 
             List<TaskModel> tasks = new List<TaskModel>();

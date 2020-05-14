@@ -74,6 +74,8 @@ namespace ScheduleMaster.Services
             var param = command.CreateParameter();
             param.ParameterName = "slot_id";
             param.Value = id;
+            
+            command.Parameters.Add(param);
 
             using var reader = command.ExecuteReader();
             reader.Read();
@@ -88,6 +90,8 @@ namespace ScheduleMaster.Services
             var param = command.CreateParameter();
             param.ParameterName = "schedule_id";
             param.Value = scheduleID;
+
+            command.Parameters.Add(param);
 
             using var reader = command.ExecuteReader();
 

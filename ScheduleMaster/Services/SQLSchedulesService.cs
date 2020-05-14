@@ -62,7 +62,8 @@ namespace ScheduleMaster.Services
             var param = command.CreateParameter();
             param.ParameterName = "schedules_id";
             param.Value = id;
-
+            
+            command.Parameters.Add(param);
             using var reader = command.ExecuteReader();
             reader.Read();
             return ScheduleModelFromData(reader);
@@ -76,8 +77,10 @@ namespace ScheduleMaster.Services
             var param = command.CreateParameter();
             param.ParameterName = "user_id";
             param.Value = userID;
-
+            
+            command.Parameters.Add(param);
             using var reader = command.ExecuteReader();
+            
 
             List<ScheduleModel> schedules = new List<ScheduleModel>();
             while (reader.Read())
@@ -135,7 +138,7 @@ namespace ScheduleMaster.Services
             scheduleidParam.Value = scheduleId;
 
             command.CommandText = "DELETE FROM schedules WHERE schedule_id= @schedule_id)";
-            command.Parameters.Add(userIdParam);
+            //command.Parameters.Add(userIdParam);
             command.Parameters.Add(scheduleidParam);
 
             command.ExecuteNonQuery();
