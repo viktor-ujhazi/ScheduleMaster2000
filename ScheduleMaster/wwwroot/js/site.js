@@ -63,6 +63,11 @@ function HideTaskPage() {
     taskForm.setAttribute("style", "display: none");
 }
 
+function HideScheduleTable(){
+    let table = document.querySelector("#ScheduleTable");
+    table.setAttribute("style", "display:none");
+}
+
 function LoginPage() {
     HideRegisterPage()
     let loginForm = document.querySelector("#loginForm");
@@ -167,6 +172,7 @@ function Logout() {
     }
     HideTaskPage();
     HideSchedulePage();
+    HideScheduleTable();
     let xhr = new XMLHttpRequest();
     xhr.open('GET', 'User/Logout', true);
     xhr.send();
@@ -316,79 +322,77 @@ function SendDataToSchedule(destination, data) {
 }
 
 
-    function SendDataToDay(destination, data, scheduleTable, numOfDays) {
-        let xhr = new XMLHttpRequest();
-        if (xhr != null) {
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(xhr.responseText);
+function SendDataToDay(destination, data, scheduleTable, numOfDays) {
+    let xhr = new XMLHttpRequest();
+    if (xhr != null) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(xhr.responseText);
 
-                    let obj = JSON.parse(xhr.responseText);
-                    let dayList = [];
+                let obj = JSON.parse(xhr.responseText);
+                let dayList = [];
 
-                    for(let i = 0; i < obj.length; i++){
-                        dayList.push(obj[i].title);
-                    }
+                for (let i = 0; i < obj.length; i++) {
+                    dayList.push(obj[i].title);
+                }
 
-                    for(let hour = 0; hour < 25; hour++){
-                        let tableRow = document.createElement("tr");
-                        if(hour === 0){
-                            for(let day = 0; day < numOfDays+1; day++){
-                                let tableCell = document.createElement("td");
-            
-                                if(day === 0){
-                                    tableCell.textContent = "Time";
-                                    tableCell.setAttribute("id", "tableCell");
-                                }else{
-                                    tableCell.textContent = dayList[day-1];
-                                    tableCell.setAttribute("id", "tableCell");
-                                }
-                                tableRow.appendChild(tableCell);
-                            }    
-                        }else{
-                            for(let day = 0; day < numOfDays+1; day++){
-                                //toDo for days             ÁTÍRNIIIIIII
-                                let tableCell = document.createElement("td");
-            
-                                if(day === 0){
-                                    tableCell.textContent = hour +" h";
-                                    tableCell.setAttribute("id", "tableCell");
-                                }else{
-                                    tableCell.textContent = "toDo " + day;
-                                    tableCell.setAttribute("id", "tableCell");
+                for (let hour = 0; hour < 25; hour++) {
+                    let tableRow = document.createElement("tr");
+                    if (hour === 0) {
+                        for (let day = 0; day < numOfDays + 1; day++) {
+                            let tableCell = document.createElement("td");
+
+                            if (day === 0) {
+                                tableCell.textContent = "Time";
+                                tableCell.setAttribute("id", "tableCell");
+                            } else {
+                                tableCell.textContent = dayList[day - 1];
+                                tableCell.setAttribute("id", "tableCell");
                             }
-                                tableRow.appendChild(tableCell);
-                            }
+                            tableRow.appendChild(tableCell);
                         }
-                        scheduleTable.appendChild(tableRow);
+                    } else {
+                        for (let day = 0; day < numOfDays + 1; day++) {
+                            //toDo for days             ÁTÍRNIIIIIII
+                            let tableCell = document.createElement("td");
+
+                            if (day === 0) {
+                                tableCell.textContent = hour + " h";
+                                tableCell.setAttribute("id", "tableCell");
+                            } else {
+                                tableCell.textContent = "toDo " + day;
+                                tableCell.setAttribute("id", "tableCell");
+                            }
+                            tableRow.appendChild(tableCell);
+                        }
                     }
+                    scheduleTable.appendChild(tableRow);
                 }
             }
-            xhr.open('POST', destination, true);
-            xhr.send(data);
         }
+        xhr.open('POST', destination, true);
+        xhr.send(data);
+    }
+}
+
+
+
+function SidePointSelected(uncutId, numOfDays) {
+    let scheduleId = uncutId.slice(7);
+    let scheduleTable = document.querySelector("#ScheduleTable");
+
+    while (scheduleTable.firstChild) {
+        scheduleTable.removeChild(scheduleTable.lastChild);
     }
 
+    scheduleTable.setAttribute("style", "display: unset");
+    scheduleTable.setAttribute("style", "content: none");
 
 
-
-
-    function SidePointSelected(uncutId, numOfDays){
-        let scheduleId = uncutId.slice(7);
-        let scheduleTable = document.querySelector("#ScheduleTable");
-
-        while (scheduleTable.firstChild) {
-            scheduleTable.removeChild(scheduleTable.lastChild);
-        }
-
-        scheduleTable.setAttribute("style","display: unset");
-        scheduleTable.setAttribute("style", "content: none");
-
-
-        var data = new FormData();
-        data.append('scheduleId', scheduleId);
-        SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
-    }
+    var data = new FormData();
+    data.append('scheduleId', scheduleId);
+    SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
+}
 
 function EditSchedule(sID, title, daysNum, userID, isPublic) {
 
