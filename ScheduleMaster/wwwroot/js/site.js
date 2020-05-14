@@ -152,15 +152,13 @@ function SendDataToSchedule(destination, data){
                 sidebar.setAttribute("style", "display: unset");
                 for(let i = 0; i < obj.value.length; i++){
                     let sidePoint = document.createElement("a");
-                    let uniqueId = "sidebar" + i;
+                    let uniqueId = "sidebar" + obj.value[i].schedule_id;
 
                     sidePoint.setAttribute("id", uniqueId);
                     sidePoint.textContent = obj.value[i].title;
 
                     sidebar.appendChild(sidePoint);
                 }
-
-
 
                 //admin@admin.com
             }

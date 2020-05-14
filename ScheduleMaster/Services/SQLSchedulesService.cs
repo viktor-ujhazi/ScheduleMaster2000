@@ -73,7 +73,7 @@ namespace ScheduleMaster.Services
         {
             using var command = _connection.CreateCommand();
             command.CommandText = "SELECT * FROM schedules WHERE user_id = @user_id";
-
+            
             var param = command.CreateParameter();
             param.ParameterName = "user_id";
             param.Value = userID;
