@@ -17,7 +17,8 @@ namespace ScheduleMaster.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var resultJson = Json(_sqlTaskService.GetAllTask(Convert.ToInt32(Request.Form["userid"])));
+            return Json(resultJson);
         }
     }
 }
