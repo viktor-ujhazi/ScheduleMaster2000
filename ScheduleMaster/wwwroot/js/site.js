@@ -206,11 +206,17 @@ function SendDataToSchedule(destination, data) {
                     SendDataToSchedule("Task/Index", data);
                 });
 
-                if (destination === "Schedule/Index") {
+                if (destination === "Schedule/Index" || destination === "Schedule/UpdateSchedule") {
                     for (let i = 0; i < obj.length; i++) {
                         let sidePoint = document.createElement("a");
                         let uniqueId = "sidebar" + obj[i].scheduleID;
+
+
+                        let sID = obj[i].scheduleID;
+                        let title = obj[i].title;
                         let daysNum = obj[i].numOfDays;
+                        let userID = obj[i].userID;
+                        let isPublic = obj[i].isPublic;
 
                         sidePoint.setAttribute("id", uniqueId);
                         sidePoint.textContent = obj[i].title;
@@ -218,6 +224,9 @@ function SendDataToSchedule(destination, data) {
                             SidePointSelected(uniqueId, daysNum);
                         })
                         sidebar.appendChild(sidePoint);
+                        sidePoint.addEventListener("dblclick", () => {
+                            EditSchedule(sID, title, daysNum, userID, isPublic);
+                        })
                     }
                 }
                 if (destination === "Task/Index") {
@@ -319,3 +328,18 @@ function SendDataToSchedule(destination, data) {
         SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
     }
 
+function EditSchedule(sID, title, daysNum, userID, isPublic) {
+
+    var scheduleTitle = prompt("Please enter the title", title);
+    var ScheduleNumOfDays = prompt("Please the number of days", daysNum);
+    var ScheduleIsPublic = prompt("Please enter your name", isPublic);
+
+    var data = new FormData();
+    data.append('scheduleID', sID);
+    data.append('title', scheduleTitle);
+    data.append('numOfDays', ScheduleNumOfDays);
+    data.append('userID', userID);
+    data.append('isPublic', ScheduleIsPublic);
+
+    SendDataToSchedule('Schedule/UpdateSchedule', data);
+}
