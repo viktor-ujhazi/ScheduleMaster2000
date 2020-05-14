@@ -56,7 +56,8 @@
 
   #ScheduleTable{
     left: 200px;
-    position: relative
+    position: relative;
+    height: 600px;
   }
 
   #tableCell{
