@@ -39,7 +39,6 @@ namespace ScheduleMaster.Controllers
             }
             catch (Npgsql.PostgresException)
             {
-
                 return Json("Email address already taken!");
             }
 

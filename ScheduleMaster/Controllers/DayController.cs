@@ -14,17 +14,17 @@ using System.Net.Http;
 
 namespace ScheduleMaster.Controllers
 {
-    public class ScheduleController : Controller
+    public class DayController : Controller
     {
-        private readonly ISchedulesService _sqlScheduleService;
+        private readonly IDaysService _daysService;
 
-        public ScheduleController(ISchedulesService sqlScheduleService)
+        public DayController(IDaysService daysService)
         {
-            _sqlScheduleService = sqlScheduleService;
+            _daysService = daysService;
         }
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var resultJson = Json(_sqlScheduleService.GetAllSchedule(Convert.ToInt32(Request.Form["userid"])));
+            var resultJson = Json(_daysService.GetAllDay(Convert.ToInt32(Request.Form["scheduleId"])));
             return resultJson;
         }
     }
