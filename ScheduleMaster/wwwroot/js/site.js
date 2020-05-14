@@ -229,17 +229,27 @@ function SendDataToSchedule(destination, data) {
                         })
                     }
                 }
-                if (destination === "Task/Index") {
+                if (destination === "Task/Index" || destination === "Task/UpdateTask") {
                     for (let i = 0; i < obj.length; i++) {
                         let sidePoint = document.createElement("a");
                         let uniqueId = "sidebar" + obj[i].TaskID;
+
+                        console.log(obj)
+
+                        let tID = obj[i].taskID;
+                        let title = obj[i].title;
+                        let taskContent = obj[i].content;
+                        let userID = obj[i].userID;
                         
                         sidePoint.setAttribute("id", uniqueId);
                         sidePoint.textContent = obj[i].title;
-                        sidePoint.addEventListener("click", () => {
-                            SidePointSelected(uniqueId, daysNum);
-                        })
+                        //sidePoint.addEventListener("click", () => {
+                        //    SidePointSelected(uniqueId, daysNum);
+                        //})
                         sidebar.appendChild(sidePoint);
+                        sidePoint.addEventListener("dblclick", () => {
+                            EditTask(tID, title, taskContent, userID);
+                        })
                     }
                 }
 
@@ -342,4 +352,21 @@ function EditSchedule(sID, title, daysNum, userID, isPublic) {
     data.append('isPublic', ScheduleIsPublic);
 
     SendDataToSchedule('Schedule/UpdateSchedule', data);
+}
+
+function EditTask(tID, title, taskContent, userID) {
+
+    console.log(tID);
+    var taskTitle = prompt("Please enter the title", title);
+    var taskCont = prompt("Please enter the task content", taskContent);
+    
+
+    var data = new FormData();
+    data.append('taskID', tID);
+    data.append('title', taskTitle);
+    data.append('content', taskCont);
+    data.append('userID', userID);
+    console.log(data);
+
+    SendDataToSchedule('Task/UpdateTask', data);
 }
