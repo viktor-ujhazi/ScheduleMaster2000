@@ -33,35 +33,46 @@
     background-color: khaki;
     overflow-x: hidden;
     padding-top: 20px;
-  }
-  
-  .sidenav a {
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
-    font-size: 25px;
-    color: chocolate;
-    display: block;
-  }
-  
-  .sidenav a:hover {
-    color: #f1f1f1;
-  }
+}
 
-  .main {
+    .sidenav a {
+        padding: 6px 8px 6px 16px;
+        text-decoration: none;
+        font-size: 25px;
+        color: chocolate;
+        display: block;
+    }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+.main {
     margin-left: 160px; /* Same as the width of the sidenav */
     font-size: 28px; /* Increased text to enable scrolling */
     padding: 0px 10px;
-  }
+}
 
 
-  #ScheduleTable{
+#ScheduleTable {
     left: 200px;
     position: relative;
     height: 600px;
-  }
+}
 
-  .tableCell{
+#scheduleForm {
+    left: 200px;
+    position: relative;
+}
+
+
+#taskForm {
+    left: 200px;
+    position: relative;
+}
+
+#tableCell {
     border: solid;
     width: 100px;
     text-align: center;
-  }
+}

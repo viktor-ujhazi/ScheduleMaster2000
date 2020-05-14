@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     element.setAttribute("id", "registerHeader");
     element.addEventListener("click", RegisterPage);
     grid.appendChild(element);
-        
+
 });
 
 
@@ -40,6 +40,28 @@ function HideRegisterPage() {
     registerForm.setAttribute("style", "display: none");
 }
 
+function SchedulePage() {
+    HideTaskPage();
+    let scheduleForm = document.querySelector("#scheduleForm");
+    scheduleForm.setAttribute("style", "display: unset");
+};
+
+function HideSchedulePage() {
+    let scheduleForm = document.querySelector("#scheduleForm");
+    scheduleForm.setAttribute("style", "display: none");
+}
+
+function TaskPage() {
+    HideSchedulePage();
+    let taskForm = document.querySelector("#taskForm");
+    taskForm.setAttribute("style", "display: unset");
+
+};
+
+function HideTaskPage() {
+    let taskForm = document.querySelector("#taskForm");
+    taskForm.setAttribute("style", "display: none");
+}
 
 function LoginPage() {
     HideRegisterPage()
@@ -72,12 +94,40 @@ function ShowLogout() {
 
 function ShowScheduleOption() {
     element = document.createElement("a");
-    element.textContent = "Show Schedules";
+    element.textContent = "Create Schedule";
     element.setAttribute("class", "headerElement");
     element.setAttribute("id", "scheduleHeader");
-    element.addEventListener("click", ShowScedules);
+    element.addEventListener("click", SchedulePage);
     grid.appendChild(element);
 }
+
+function ShowTaskOption() {
+    element = document.createElement("a");
+    element.textContent = "Create Task";
+    element.setAttribute("class", "headerElement");
+    element.setAttribute("id", "taskHeader");
+    element.addEventListener("click", TaskPage);
+    grid.appendChild(element);
+}
+
+function CreateSchedules(form) {
+    let data = new FormData();
+    data.append('numOfDays', form.numOfDays.value);
+    data.append('title', form.title.value);
+    data.append('userID', currentProfileID)
+
+    SendDataToSchedule('Schedule/AddSchedule', data)
+}
+
+function CreateTasks(form) {
+    let data = new FormData();
+    data.append('content', form.content.value);
+    data.append('title', form.title.value);
+    data.append('userID', currentProfileID)
+
+    SendDataToSchedule('Task/AddTask', data)
+}
+
 
 function Login(form) {
     var data = new FormData();
@@ -85,7 +135,6 @@ function Login(form) {
     data.append('email', form.email.value);
 
     SendDataToLogin("User/Login", data);
-    //ShowScheduleOption();
 }
 
 
@@ -105,12 +154,19 @@ function Logout() {
     let headerToRemove = document.querySelector("#logoutHeader");
     grid.removeChild(headerToRemove);
 
+    headerToRemove = document.querySelector("#scheduleHeader");
+    grid.removeChild(headerToRemove);
+
+    headerToRemove = document.querySelector("#taskHeader");
+    grid.removeChild(headerToRemove);
+
     let sidebar = document.querySelector(".sidenav");
     sidebar.setAttribute("style", "display: none");
     while (sidebar.firstChild) {
         sidebar.removeChild(sidebar.lastChild);
     }
-
+    HideTaskPage();
+    HideSchedulePage();
     let xhr = new XMLHttpRequest();
     xhr.open('GET', 'User/Logout', true);
     xhr.send();
@@ -138,9 +194,12 @@ function SendDataToLogin(destination, data) {
                     HideLoginForm();
                     ShowLogout();
 
+                    ShowScheduleOption();
+                    ShowTaskOption();
+
                     var data = new FormData();
                     data.append('userid', xhr.responseText);
-                    console.log(data);
+                    currentProfileID = xhr.responseText;
                     SendDataToSchedule("Schedule/Index", data);
                 }
             }
@@ -158,12 +217,12 @@ function SendDataToRegister(destination, data) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 alert(xhr.responseText);
-                if(xhr.responseText != '"Success!"'){
-                    
+                if (xhr.responseText != '"Success!"') {
+
                     RegisterPage();
-                }else{
+                } else {
                     LoginPage();
-                }   
+                }
             }
         }
         xhr.open('POST', destination, true);
@@ -176,11 +235,14 @@ function SendDataToSchedule(destination, data) {
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-               console.log(xhr.responseText);   //TO DELETE
-               let obj = JSON.parse(xhr.responseText);
+                console.log(xhr.responseText);   //TO DELETE
+                let obj = JSON.parse(xhr.responseText);
                 //obj.value[0].title az első elem a scheduleok között
 
                 var sidebar = document.querySelector(".sidenav");
+
+                HideSchedulePage();
+                HideTaskPage();
 
                 sidebar.setAttribute("style", "display: unset");
                 while (sidebar.firstChild) {
@@ -189,9 +251,9 @@ function SendDataToSchedule(destination, data) {
                 let selectorbuttons = document.createElement("div");
                 let btnSchedule = document.createElement("input");
                 let btnTask = document.createElement("input");
-                btnSchedule.setAttribute("type","button");
+                btnSchedule.setAttribute("type", "button");
                 btnSchedule.setAttribute("value", "Schedules");
-                
+
                 btnTask.setAttribute("type", "button");
                 btnTask.setAttribute("value", "Tasks");
 
@@ -206,11 +268,17 @@ function SendDataToSchedule(destination, data) {
                     SendDataToSchedule("Task/Index", data);
                 });
 
-                if (destination === "Schedule/Index") {
+                if (destination === "Schedule/Index" || destination === "Schedule/UpdateSchedule" || destination === 'Schedule/AddSchedule') {
                     for (let i = 0; i < obj.length; i++) {
                         let sidePoint = document.createElement("a");
                         let uniqueId = "sidebar" + obj[i].scheduleID;
+
+
+                        let sID = obj[i].scheduleID;
+                        let title = obj[i].title;
                         let daysNum = obj[i].numOfDays;
+                        let userID = obj[i].userID;
+                        let isPublic = obj[i].isPublic;
 
                         sidePoint.setAttribute("id", uniqueId);
                         sidePoint.textContent = obj[i].title;
@@ -218,19 +286,33 @@ function SendDataToSchedule(destination, data) {
                             SidePointSelected(uniqueId, daysNum);
                         })
                         sidebar.appendChild(sidePoint);
+                        sidePoint.addEventListener("dblclick", () => {
+                            EditSchedule(sID, title, daysNum, userID, isPublic);
+                        })
                     }
                 }
-                if (destination === "Task/Index") {
+                if (destination === "Task/Index" || destination === 'Task/AddTask' || destination === "Task/UpdateTask") {
+               
                     for (let i = 0; i < obj.length; i++) {
                         let sidePoint = document.createElement("a");
                         let uniqueId = "sidebar" + obj[i].TaskID;
+
+                        console.log(obj)
+
+                        let tID = obj[i].taskID;
+                        let title = obj[i].title;
+                        let taskContent = obj[i].content;
+                        let userID = obj[i].userID;
                         
                         sidePoint.setAttribute("id", uniqueId);
                         sidePoint.textContent = obj[i].title;
-                        sidePoint.addEventListener("click", () => {
-                            SidePointSelected(uniqueId, daysNum);
-                        })
+                        //sidePoint.addEventListener("click", () => {
+                        //    SidePointSelected(uniqueId, daysNum);
+                        //})
                         sidebar.appendChild(sidePoint);
+                        sidePoint.addEventListener("dblclick", () => {
+                            EditTask(tID, title, taskContent, userID);
+                        })
                     }
                 }
 
@@ -353,3 +435,35 @@ function SendDataToSchedule(destination, data) {
         SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
     }
 
+function EditSchedule(sID, title, daysNum, userID, isPublic) {
+
+    var scheduleTitle = prompt("Please enter the title", title);
+    var ScheduleNumOfDays = prompt("Please the number of days", daysNum);
+    var ScheduleIsPublic = prompt("Please enter your name", isPublic);
+
+    var data = new FormData();
+    data.append('scheduleID', sID);
+    data.append('title', scheduleTitle);
+    data.append('numOfDays', ScheduleNumOfDays);
+    data.append('userID', userID);
+    data.append('isPublic', ScheduleIsPublic);
+
+    SendDataToSchedule('Schedule/UpdateSchedule', data);
+}
+
+function EditTask(tID, title, taskContent, userID) {
+
+    console.log(tID);
+    var taskTitle = prompt("Please enter the title", title);
+    var taskCont = prompt("Please enter the task content", taskContent);
+    
+
+    var data = new FormData();
+    data.append('taskID', tID);
+    data.append('title', taskTitle);
+    data.append('content', taskCont);
+    data.append('userID', userID);
+    console.log(data);
+
+    SendDataToSchedule('Task/UpdateTask', data);
+}

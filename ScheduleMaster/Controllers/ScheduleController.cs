@@ -27,5 +27,33 @@ namespace ScheduleMaster.Controllers
             var resultJson = Json(_sqlScheduleService.GetAllSchedule(Convert.ToInt32(Request.Form["userid"])));
             return resultJson;
         }
+
+        public ActionResult UpdateSchedule()
+        {
+            int scheduleId = Convert.ToInt32(Request.Form["scheduleID"]);
+            string title = Request.Form["title"];
+            int numOfDays = Convert.ToInt32(Request.Form["numOfDays"]);
+            int userID = Convert.ToInt32(Request.Form["userID"]);
+            bool isPublic = Convert.ToBoolean(Request.Form["isPublic"]);
+
+
+
+            _sqlScheduleService.UpdateSchedule(scheduleId, title, numOfDays, userID, isPublic);
+
+
+            var resultJson = Json(_sqlScheduleService.GetAllSchedule(Convert.ToInt32(Request.Form["userid"])));
+            return resultJson;
+        }
+        public ActionResult AddSchedule()
+        {
+            var title = Request.Form["title"];
+            var duration = Convert.ToInt32(Request.Form["numOfDays"]);
+            var userId = Convert.ToInt32(Request.Form["userID"]);
+
+            _sqlScheduleService.AddSchedule(title, duration, userId);
+
+            var resultJson = Json(_sqlScheduleService.GetAllSchedule(userId));
+            return resultJson;
+        }
     }
 }
