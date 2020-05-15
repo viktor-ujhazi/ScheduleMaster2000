@@ -410,7 +410,13 @@ function EditSchedule(sID, title, daysNum, userID, isPublic) {
 
     var scheduleTitle = prompt("Please enter the title", title);
     var ScheduleNumOfDays = prompt("Please the number of days", daysNum);
-    var ScheduleIsPublic = prompt("Please enter your name", isPublic);
+    var ScheduleIsPublic = prompt("Is it public?", isPublic).toLowerCase();
+    console.log(ScheduleIsPublic);
+    if (ScheduleIsPublic === 'true' || ScheduleIsPublic === 'yes' || ScheduleIsPublic === 1) {
+        ScheduleIsPublic = true;
+    } else {
+        ScheduleIsPublic = false;
+    }
 
     var data = new FormData();
     data.append('scheduleID', sID);
