@@ -417,6 +417,9 @@ function EditSchedule(sID, title, daysNum, userID, isPublic) {
     } else {
         ScheduleIsPublic = false;
     }
+    if (typeof ScheduleNumOfDays !== 'number' || ScheduleNumOfDays > 7 || ScheduleNumOfDays < 1) {
+        ScheduleNumOfDays = daysNum;
+    }
 
     var data = new FormData();
     data.append('scheduleID', sID);
