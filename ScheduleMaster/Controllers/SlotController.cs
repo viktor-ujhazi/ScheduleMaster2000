@@ -28,14 +28,14 @@ namespace ScheduleMaster.Controllers
             string dayIdsUncutted = Request.Form["dayIds"];
             string[] daysIds = dayIdsUncutted.Split(",");
 
-            Dictionary<int, List<SlotModel>> markedSlots = new Dictionary<int, List<SlotModel>>();
+            List <List<SlotModel>> markedSlots = new List<List<SlotModel>>();
 
             foreach (var dayId in daysIds)
             {
-                markedSlots[Convert.ToInt32(dayId)] = _slotService.GetAllSlotByDayId(Convert.ToInt32(dayId));
+                markedSlots.Add(_slotService.GetAllSlotByDayId(Convert.ToInt32(dayId)));
             }
-            var asd = JsonConvert.SerializeObject(markedSlots);
-            return Json(asd);
+
+            return Json(markedSlots);
         }
     }
 }

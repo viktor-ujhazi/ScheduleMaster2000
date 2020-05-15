@@ -12,13 +12,5 @@ namespace ScheduleMaster.Models
         public string Content { get; set; }
         public int UserID { get; set; }
 
-        //public TaskModel(int taskID, string title, string content, int userID)
-        //{
-        //    TaskID = taskID;
-        //    Title = title;
-        //    Content = content;
-        //    UserID = userID;
-        //}
-        
     }
 }
