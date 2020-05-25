@@ -42,6 +42,7 @@ function HideRegisterPage() {
 
 function SchedulePage() {
     HideTaskPage();
+    HideScheduleTable();
     let scheduleForm = document.querySelector("#scheduleForm");
     scheduleForm.setAttribute("style", "display: unset");
 };
@@ -53,6 +54,7 @@ function HideSchedulePage() {
 
 function TaskPage() {
     HideSchedulePage();
+    HideScheduleTable();
     let taskForm = document.querySelector("#taskForm");
     taskForm.setAttribute("style", "display: unset");
 
@@ -361,7 +363,7 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                             } else {
                                 tableCell.textContent = dayList[day - 1].title;
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
-                                tableCell.addEventListener("click", ModifyTitle);
+                                tableCell.addEventListener("click", () => { ModifyTitle(dayList[day - 1].title, dayList[day - 1].dayID) });
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -422,8 +424,19 @@ function AddTask() {
     alert("MIke");
 }
 
-function ModifyTitle() {
-    alert("Ike");
+function ModifyTitle(title, dayId) {
+    let dayTitle=  prompt("Please enter the title", title);
+
+    let data = new FormData();
+    data.append('dayId', dayId);
+    data.append('title', dayTitle);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'Day/UpdateTitle', true);
+
+    xhr.send(data)
+
+
 }
 
 function SidePointSelected(uncutId, numOfDays) {
