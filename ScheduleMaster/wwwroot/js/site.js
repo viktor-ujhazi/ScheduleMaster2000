@@ -1,4 +1,4 @@
-﻿const grid = document.querySelector("#headerGrid");
+﻿﻿const grid = document.querySelector("#headerGrid");
 let currentProfileEmail = null;
 let currentProfileID = null;
 
@@ -63,7 +63,7 @@ function HideTaskPage() {
     taskForm.setAttribute("style", "display: none");
 }
 
-function HideScheduleTable(){
+function HideScheduleTable() {
     let table = document.querySelector("#ScheduleTable");
     table.setAttribute("style", "display:none");
 }
@@ -241,7 +241,7 @@ function SendDataToSchedule(destination, data) {
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                console.log(xhr.responseText);   //TO DELETE
+
                 let obj = JSON.parse(xhr.responseText);
                 //obj.value[0].title az első elem a scheduleok között
 
@@ -298,18 +298,18 @@ function SendDataToSchedule(destination, data) {
                     }
                 }
                 if (destination === "Task/Index" || destination === 'Task/AddTask' || destination === "Task/UpdateTask") {
-               
+
                     for (let i = 0; i < obj.length; i++) {
                         let sidePoint = document.createElement("a");
                         let uniqueId = "sidebar" + obj[i].TaskID;
 
-                        console.log(obj)
+
 
                         let tID = obj[i].taskID;
                         let title = obj[i].title;
                         let taskContent = obj[i].content;
                         let userID = obj[i].userID;
-                        
+
                         sidePoint.setAttribute("id", uniqueId);
                         sidePoint.textContent = obj[i].title;
                         //sidePoint.addEventListener("click", () => {
@@ -338,42 +338,48 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log(xhr.responseText);
+
 
                 let obj = JSON.parse(xhr.responseText);
                 let dayList = [];
 
-                for(let i = 0; i < obj.length; i++){
-                    dayList.push(obj[i].title);
+
+                for (let i = 0; i < obj.length; i++) {
+                    dayList.push(obj[i]);
                 }
 
-                for(let hour = 0; hour < 25; hour++){
+                for (let hour = 0; hour < 25; hour++) {
                     let tableRow = document.createElement("tr");
-                    if(hour === 0){
-                        for(let day = 0; day < numOfDays+1; day++){
+                    if (hour === 0) {
+                        for (let day = 0; day < numOfDays + 1; day++) {
                             let tableCell = document.createElement("td");
 
-                            if(day === 0){
+                            if (day === 0) {
                                 tableCell.textContent = "Time";
-                                tableCell.setAttribute("id", "tableCell");
-                            }else{
-                                tableCell.textContent = dayList[day-1];
-                                tableCell.setAttribute("id", "tableCell");
+                                tableCell.setAttribute("id", `tableCell-${0}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
+                            } else {
+                                tableCell.textContent = dayList[day - 1].title;
+                                tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
                             }
                             tableRow.appendChild(tableCell);
-                        }    
-                    }else{
-                        for(let day = 0; day < numOfDays+1; day++){
-                            //toDo for days             ÁTÍRNIIIIIII
+                        }
+                    } else {
+                        for (let day = 0; day < numOfDays + 1; day++) {
+
+
                             let tableCell = document.createElement("td");
 
-                            if(day === 0){
-                                tableCell.textContent = hour +" h";
-                                tableCell.setAttribute("id", "tableCell");
-                            }else{
-                                tableCell.textContent = "toDo " + day;
-                                tableCell.setAttribute("id", "tableCell");
-                        }
+                            if (day === 0) {
+                                tableCell.textContent = hour + " h";
+                                tableCell.setAttribute("id", `tableCell-${0}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
+                            } else {
+                                LoadTask(dayList[day - 1].scheduleID, dayList[day - 1].dayID, hour);
+                                tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
+                            }
                             tableRow.appendChild(tableCell);
                         }
                     }
@@ -386,31 +392,55 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
     }
 }
 
+function LoadTask(scheduleId, dayId, startSlot) {
+    var data = new FormData();
+    data.append('scheduleId', scheduleId);
+    data.append('dayId', dayId);
+    data.append('startSlot', startSlot);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'Slot/TaskToSlot', true);
+    xhr.onload = function () {
+
+        let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`)
+        let result = JSON.parse(xhr.response);
+        cellToChange.textContent = result;
+        return result;
+    };
+    xhr.send(data);
+}
 
 
+function SidePointSelected(uncutId, numOfDays) {
+    let scheduleId = uncutId.slice(7);
+    let scheduleTable = document.querySelector("#ScheduleTable");
 
-    function SidePointSelected(uncutId, numOfDays){
-        let scheduleId = uncutId.slice(7);
-        let scheduleTable = document.querySelector("#ScheduleTable");
-
-        while (scheduleTable.firstChild) {
-            scheduleTable.removeChild(scheduleTable.lastChild);
-        }
-
-        scheduleTable.setAttribute("style", "display: unset");
-        scheduleTable.setAttribute("style", "content: none");
-
-
-        var data = new FormData();
-        data.append('scheduleId', scheduleId);
-        SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
+    while (scheduleTable.firstChild) {
+        scheduleTable.removeChild(scheduleTable.lastChild);
     }
+
+    scheduleTable.setAttribute("style", "display: unset");
+    scheduleTable.setAttribute("style", "content: none");
+
+
+    var data = new FormData();
+    data.append('scheduleId', scheduleId);
+    SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
+}
 
 function EditSchedule(sID, title, daysNum, userID, isPublic) {
 
     var scheduleTitle = prompt("Please enter the title", title);
     var ScheduleNumOfDays = prompt("Please the number of days", daysNum);
-    var ScheduleIsPublic = prompt("Please enter your name", isPublic);
+    var ScheduleIsPublic = prompt("Is it public?", isPublic).toLowerCase();
+    if (ScheduleIsPublic === 'true' || ScheduleIsPublic === 'yes' || ScheduleIsPublic === 1) {
+        ScheduleIsPublic = true;
+    } else {
+        ScheduleIsPublic = false;
+    }
+    if (typeof ScheduleNumOfDays !== 'number' || ScheduleNumOfDays > 7 || ScheduleNumOfDays < 1) {
+        ScheduleNumOfDays = daysNum;
+    }
 
     var data = new FormData();
     data.append('scheduleID', sID);
@@ -424,17 +454,17 @@ function EditSchedule(sID, title, daysNum, userID, isPublic) {
 
 function EditTask(tID, title, taskContent, userID) {
 
-    console.log(tID);
+
     var taskTitle = prompt("Please enter the title", title);
     var taskCont = prompt("Please enter the task content", taskContent);
-    
+
 
     var data = new FormData();
     data.append('taskID', tID);
     data.append('title', taskTitle);
     data.append('content', taskCont);
     data.append('userID', userID);
-    console.log(data);
+
 
     SendDataToSchedule('Task/UpdateTask', data);
 }
@@ -469,7 +499,7 @@ function EditTask(tID, title, taskContent, userID) {
 //                         if(hour === 0){
 //                             for(let day = 0; day < numOfDays+1; day++){
 //                                 let tableCell = document.createElement("td");
-            
+
 //                                 if(day === 0){
 //                                     tableCell.textContent = "Time";
 //                                     tableCell.setAttribute("class", "tableCell");
@@ -504,7 +534,7 @@ function EditTask(tID, title, taskContent, userID) {
 
 //                     let obj = JSON.parse(xhr.responseText); //itt van a dictionary
 //                     console.log(obj);       //egész array kiírása (az összes azonos userId-t írja kis a schedule-hoz)
-                    
+
 //                     for(let i=0;i<obj.length;i++){
 //                         for(let j=0;j<obj[i].length;j++){
 //                             console.log("taskID: "+obj[i][j].taskID);
@@ -517,7 +547,7 @@ function EditTask(tID, title, taskContent, userID) {
 
 //                     for(let day = 0; day < numOfDays+1; day++){
 //                         let tableCell = document.createElement("td");
-    
+
 //                         if(day === 0){
 //                             tableCell.textContent = hour +" h";
 //                             tableCell.setAttribute("class", "tableCell");
@@ -546,7 +576,7 @@ function EditTask(tID, title, taskContent, userID) {
 //             xhr.onreadystatechange = function () {
 //                 if (xhr.readyState === 4 && xhr.status === 200) {
 //                     let obj = JSON.parse(xhr.responseText);
-                    
+
 //                     listOfTasks.push(obj);
 //                 }
 //             }
