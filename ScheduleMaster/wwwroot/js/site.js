@@ -408,87 +408,87 @@ function LoadTask(scheduleId, dayId, startSlot) {
             let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
             cellToSpan.remove();
 
-        let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`);
-        
-        
-        if (xhr.response !=='null') {
-            let result = JSON.parse(xhr.response);
-            cellToChange.setAttribute("rowspan", `${result.slotLength}`);
-            for (let i = 1; i < result.slotLength; i++) {
-                let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
-                cellToSpan.remove();
-                cellToChange.textContent = result.taskModel_.title;
+            let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`);
+
+
+            if (xhr.response !== 'null') {
+                let result = JSON.parse(xhr.response);
+                cellToChange.setAttribute("rowspan", `${result.slotLength}`);
+                for (let i = 1; i < result.slotLength; i++) {
+                    let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
+                    cellToSpan.remove();
+                    cellToChange.textContent = result.taskModel_.title;
+                }
+                return result.title;
             }
-            return result.title;
+
+
+
+        };
+        xhr.send(data);
+    }
+
+
+    function SidePointSelected(uncutId, numOfDays) {
+        let scheduleId = uncutId.slice(7);
+        let scheduleTable = document.querySelector("#ScheduleTable");
+
+        while (scheduleTable.firstChild) {
+            scheduleTable.removeChild(scheduleTable.lastChild);
         }
-               
-        
-        
-    };
-    xhr.send(data);
-}
+
+        scheduleTable.setAttribute("style", "display: unset");
+        scheduleTable.setAttribute("style", "content: none");
 
 
-function SidePointSelected(uncutId, numOfDays) {
-    let scheduleId = uncutId.slice(7);
-    let scheduleTable = document.querySelector("#ScheduleTable");
-
-    while (scheduleTable.firstChild) {
-        scheduleTable.removeChild(scheduleTable.lastChild);
+        var data = new FormData();
+        data.append('scheduleId', scheduleId);
+        SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
     }
 
-    scheduleTable.setAttribute("style", "display: unset");
-    scheduleTable.setAttribute("style", "content: none");
+    function EditSchedule(sID, title, daysNum, userID, isPublic) {
 
+        var scheduleTitle = prompt("Please enter the title", title);
+        var ScheduleNumOfDays = prompt("Please the number of days", daysNum);
+        var ScheduleIsPublic = prompt("Is it public?", isPublic).toLowerCase();
+        if (ScheduleIsPublic === 'true' || ScheduleIsPublic === 'yes' || ScheduleIsPublic === 1) {
+            ScheduleIsPublic = true;
+        } else {
+            ScheduleIsPublic = false;
+        }
+        if (typeof ScheduleNumOfDays !== 'number' || ScheduleNumOfDays > 7 || ScheduleNumOfDays < 1) {
+            ScheduleNumOfDays = daysNum;
+        }
 
-    var data = new FormData();
-    data.append('scheduleId', scheduleId);
-    SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
-}
+        var data = new FormData();
+        data.append('scheduleID', sID);
+        data.append('title', scheduleTitle);
+        data.append('numOfDays', ScheduleNumOfDays);
+        data.append('userID', userID);
+        data.append('isPublic', ScheduleIsPublic);
 
-function EditSchedule(sID, title, daysNum, userID, isPublic) {
-
-    var scheduleTitle = prompt("Please enter the title", title);
-    var ScheduleNumOfDays = prompt("Please the number of days", daysNum);
-    var ScheduleIsPublic = prompt("Is it public?", isPublic).toLowerCase();
-    if (ScheduleIsPublic === 'true' || ScheduleIsPublic === 'yes' || ScheduleIsPublic === 1) {
-        ScheduleIsPublic = true;
-    } else {
-        ScheduleIsPublic = false;
+        SendDataToSchedule('Schedule/UpdateSchedule', data);
     }
-    if (typeof ScheduleNumOfDays !== 'number' || ScheduleNumOfDays > 7 || ScheduleNumOfDays < 1) {
-        ScheduleNumOfDays = daysNum;
+
+    function EditTask(tID, title, taskContent, userID) {
+
+
+        var taskTitle = prompt("Please enter the title", title);
+        var taskCont = prompt("Please enter the task content", taskContent);
+
+
+        var data = new FormData();
+        data.append('taskID', tID);
+        data.append('title', taskTitle);
+        data.append('content', taskCont);
+        data.append('userID', userID);
+
+
+        SendDataToSchedule('Task/UpdateTask', data);
     }
 
-    var data = new FormData();
-    data.append('scheduleID', sID);
-    data.append('title', scheduleTitle);
-    data.append('numOfDays', ScheduleNumOfDays);
-    data.append('userID', userID);
-    data.append('isPublic', ScheduleIsPublic);
 
-    SendDataToSchedule('Schedule/UpdateSchedule', data);
 }
-
-function EditTask(tID, title, taskContent, userID) {
-
-
-    var taskTitle = prompt("Please enter the title", title);
-    var taskCont = prompt("Please enter the task content", taskContent);
-
-
-    var data = new FormData();
-    data.append('taskID', tID);
-    data.append('title', taskTitle);
-    data.append('content', taskCont);
-    data.append('userID', userID);
-
-
-    SendDataToSchedule('Task/UpdateTask', data);
-}
-
-
-
 
 
 
