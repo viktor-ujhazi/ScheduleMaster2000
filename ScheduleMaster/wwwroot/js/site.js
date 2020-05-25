@@ -404,16 +404,20 @@ function LoadTask(scheduleId, dayId, startSlot) {
 
         let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`);
         
-        let result = JSON.parse(xhr.response);
-        cellToChange.setAttribute("rowspan", `${result.slotLength}`);
-        for (let i = 1; i < result.slotLength; i++) {
-            let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
-            cellToSpan.remove();
+        
+        if (xhr.response !=='null') {
+            let result = JSON.parse(xhr.response);
+            cellToChange.setAttribute("rowspan", `${result.slotLength}`);
+            for (let i = 1; i < result.slotLength; i++) {
+                let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
+                cellToSpan.remove();
+                cellToChange.textContent = result.taskModel_.title;
+            }
+            return result.title;
         }
-
-        cellToChange.textContent = result.taskModel_.title;
-        console.log(result);
-        return result.title;
+               
+        
+        
     };
     xhr.send(data);
 }
