@@ -172,20 +172,36 @@ namespace ScheduleMaster.Services
             }
             return slots;
         }
-        public TaskModel GetTaskForSlot(int scheduleID, int dayID, int startSlot)
+
+        
+        public SlotTaskModel GetTaskForSlot(int scheduleID, int dayID, int startSlot)
         {
+            var commandT = _connection.CreateCommand();
+            commandT.CommandText = $"(SELECT task_id, slot_length FROM slots WHERE day_id = {dayID} and schedule_id = {scheduleID} and start_slot = {startSlot}) ";
+            var readerT = commandT.ExecuteReader();
+            readerT.Read();
+            int taskID = (int)readerT["task_id"];
+            int slotLength = (int)readerT["slot_length"];
+            commandT.Dispose();
+            readerT.Dispose();
 
             using var command = _connection.CreateCommand();
-            command.CommandText = $"SELECT * FROM tasks WHERE task_id = (SELECT task_id FROM slots WHERE day_id = {dayID} and schedule_id = {scheduleID} and start_slot = {startSlot})";
+            command.CommandText = $"SELECT * FROM tasks WHERE task_id = {taskID} ";
+              
 
             using var reader = command.ExecuteReader();
             reader.Read();
-            TaskModel resultTask = new TaskModel
+            SlotTaskModel resultTask = new SlotTaskModel
             {
+                TaskModel_ = new TaskModel{
                 TaskID = (int)reader["task_id"],
                 Title = (string)reader["title"],
                 Content = (string)reader["content"],
                 UserID = (int)reader["user_id"],
+                },
+                SlotLength = slotLength
+
+
             };
 
 

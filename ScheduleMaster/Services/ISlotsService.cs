@@ -12,7 +12,7 @@ namespace ScheduleMaster.Services
         void UpdateSlot(int slotID, int dayID, int taskID, int startSlot, int slotLength);
         public List<SlotModel> GetAllSlotByDayId(int dayID);
 
-        public TaskModel GetTaskForSlot(int scheduleID, int dayID, int startSlot);
+        public SlotTaskModel GetTaskForSlot(int scheduleID, int dayID, int startSlot);
 
     }
 }
