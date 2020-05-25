@@ -35,7 +35,7 @@ namespace ScheduleMaster.Services
             var param = command.CreateParameter();
             param.ParameterName = "day_id";
             param.Value = id;
-            
+
             command.Parameters.Add(param);
 
             using var reader = command.ExecuteReader();
@@ -46,7 +46,7 @@ namespace ScheduleMaster.Services
         public List<DayModel> GetAllDay(int scheduleID)
         {
             using var command = _connection.CreateCommand();
-            command.CommandText = "SELECT * FROM days WHERE schedule_id = @schedule_id";
+            command.CommandText = "SELECT * FROM days WHERE schedule_id = @schedule_id ORDER BY day_id";
 
             var param = command.CreateParameter();
             param.ParameterName = "schedule_id";
