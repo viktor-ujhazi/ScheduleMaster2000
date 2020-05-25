@@ -28,7 +28,7 @@ namespace ScheduleMaster.Controllers
             string dayIdsUncutted = Request.Form["dayIds"];
             string[] daysIds = dayIdsUncutted.Split(",");
 
-            List <List<SlotModel>> markedSlots = new List<List<SlotModel>>();
+            List<List<SlotModel>> markedSlots = new List<List<SlotModel>>();
 
             foreach (var dayId in daysIds)
             {
@@ -36,6 +36,26 @@ namespace ScheduleMaster.Controllers
             }
 
             return Json(markedSlots);
+        }
+
+        public IActionResult TaskToSlot()
+        {
+
+            var scheduleId = Convert.ToInt32(Request.Form["scheduleId"]);
+            var dayId = Convert.ToInt32(Request.Form["dayId"]);
+            var startSlot = Convert.ToInt32(Request.Form["startSlot"]);
+
+            var taskResult = "";
+            try
+            {
+                taskResult = _slotService.GetTaskForSlot(scheduleId, dayId, startSlot).Title;
+            }
+            catch (Exception)
+            {
+
+                return Json(taskResult);
+            }
+            return Json(taskResult);
         }
     }
 }
