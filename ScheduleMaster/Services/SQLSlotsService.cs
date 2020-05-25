@@ -172,5 +172,23 @@ namespace ScheduleMaster.Services
             }
             return slots;
         }
+        public TaskModel GetTaskForSlot(int scheduleID, int dayID, int startSlot)
+        {
+            
+            using var command = _connection.CreateCommand();
+            command.CommandText = $"SELECT * FROM tasks WHERE task_id = (SELECT task_id FROM slots WHERE day_id = {dayID} and schedule_id = {scheduleID} and start_slot = {startSlot})";
+
+            using var reader = command.ExecuteReader();
+            TaskModel resultTask = new TaskModel
+            {
+                TaskID = (int)reader["task_id"],
+                Title = (string)reader["title"],
+                Content = (string)reader["content"],
+                UserID = (int)reader["user_id"],
+            };
+
+
+            return resultTask;
+        }
     }
 }
