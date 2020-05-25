@@ -361,7 +361,7 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                             } else {
                                 tableCell.textContent = dayList[day - 1].title;
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
-                                tableCell.setAttribute("class", "tableCell");
+
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -401,7 +401,6 @@ function LoadTask(scheduleId, dayId, startSlot) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'Slot/TaskToSlot', true);
     xhr.onload = function () {
-
         let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`)
         let result = JSON.parse(xhr.response);
         cellToChange.textContent = result;
