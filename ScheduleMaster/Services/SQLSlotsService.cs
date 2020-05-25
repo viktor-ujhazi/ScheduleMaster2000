@@ -74,7 +74,7 @@ namespace ScheduleMaster.Services
             var param = command.CreateParameter();
             param.ParameterName = "slot_id";
             param.Value = id;
-            
+
             command.Parameters.Add(param);
 
             using var reader = command.ExecuteReader();
@@ -174,11 +174,12 @@ namespace ScheduleMaster.Services
         }
         public TaskModel GetTaskForSlot(int scheduleID, int dayID, int startSlot)
         {
-            
+
             using var command = _connection.CreateCommand();
             command.CommandText = $"SELECT * FROM tasks WHERE task_id = (SELECT task_id FROM slots WHERE day_id = {dayID} and schedule_id = {scheduleID} and start_slot = {startSlot})";
 
             using var reader = command.ExecuteReader();
+            reader.Read();
             TaskModel resultTask = new TaskModel
             {
                 TaskID = (int)reader["task_id"],

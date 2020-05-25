@@ -356,10 +356,12 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
 
                             if (day === 0) {
                                 tableCell.textContent = "Time";
-                                tableCell.setAttribute("id", "tableCell");
+                                tableCell.setAttribute("id", `tableCell-${0}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
                             } else {
                                 tableCell.textContent = dayList[day - 1].title;
-                                tableCell.setAttribute("id", "tableCell");
+                                tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -371,10 +373,12 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
 
                             if (day === 0) {
                                 tableCell.textContent = hour + " h";
-                                tableCell.setAttribute("id", "tableCell");
+                                tableCell.setAttribute("id", `tableCell-${0}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
                             } else {
-                                tableCell.textContent = LoadTask(dayList[day].scheduleID, dayList[day].dayID, hour);
-                                tableCell.setAttribute("id", "tableCell");
+                                LoadTask(dayList[day - 1].scheduleID, dayList[day - 1].dayID, hour);
+                                tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
+                                tableCell.setAttribute("class", "tableCell");
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -395,7 +399,14 @@ function LoadTask(scheduleId, dayId, startSlot) {
     data.append('startSlot', startSlot);
 
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'Task/TaskToSlot', true);
+    xhr.open('POST', 'Slot/TaskToSlot', true);
+    xhr.onload = function () {
+
+        let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`)
+        let result = JSON.parse(xhr.response);
+        cellToChange.textContent = result;
+        return result;
+    };
     xhr.send(data);
 }
 

@@ -55,15 +55,6 @@ namespace ScheduleMaster.Controllers
             return resultJson;
         }
 
-        public IActionResult TaskToSlot()
-        {
 
-            var scheduleId = Convert.ToInt32(Request.Form["scheduleId"]);
-            var dayId = Request.Form["dayId"];
-            var startSlot = Request.Form["startSlot"];
-
-
-            return Json(_sqlTaskService);
-        }
     }
 }
