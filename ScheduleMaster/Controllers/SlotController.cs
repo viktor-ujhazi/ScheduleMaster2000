@@ -45,10 +45,10 @@ namespace ScheduleMaster.Controllers
             var dayId = Convert.ToInt32(Request.Form["dayId"]);
             var startSlot = Convert.ToInt32(Request.Form["startSlot"]);
 
-            var taskResult = "";
+            SlotTaskModel taskResult = null;
             try
             {
-                taskResult = _slotService.GetTaskForSlot(scheduleId, dayId, startSlot).Title;
+                taskResult = _slotService.GetTaskForSlot(scheduleId, dayId, startSlot);
             }
             catch (Exception)
             {
