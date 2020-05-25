@@ -24,7 +24,7 @@ namespace ScheduleMaster.Controllers
         public IActionResult TaskHandler()
         {
             var taskId = Request.Form["taskid"];
-           
+
             return Json(_sqlTaskService.GetTask(Convert.ToInt32(taskId)));
         }
 
@@ -42,18 +42,28 @@ namespace ScheduleMaster.Controllers
         public ActionResult UpdateTask()
         {
 
-
             int taskId = Convert.ToInt32(Request.Form["taskID"]);
             string title = Request.Form["title"];
             string content = Request.Form["content"];
             int userID = Convert.ToInt32(Request.Form["userID"]);
-            
+
 
             _sqlTaskService.UpdateTask(taskId, title, content, userID);
 
 
             var resultJson = Json(_sqlTaskService.GetAllTask(Convert.ToInt32(Request.Form["userid"])));
             return resultJson;
+        }
+
+        public IActionResult TaskToSlot()
+        {
+
+            var scheduleId = Convert.ToInt32(Request.Form["scheduleId"]);
+            var dayId = Request.Form["dayId"];
+            var startSlot = Request.Form["startSlot"];
+
+
+            return Json(_sqlTaskService);
         }
     }
 }
