@@ -99,8 +99,8 @@ UPDATE days SET title = 'Day title 12' WHERE day_id = 12;
 
 /* Create slots */
 
-INSERT INTO slots (schedule_id, day_id, task_id, start_slot, slot_length) VALUES (1,1,1,5,1);
+INSERT INTO slots (schedule_id, day_id, task_id, start_slot, slot_length) VALUES (1,1,1,1,6);
 
-INSERT INTO slots (schedule_id, day_id, task_id, start_slot, slot_length) VALUES (1,2,1,12,1);
+INSERT INTO slots (schedule_id, day_id, task_id, start_slot, slot_length) VALUES (1,2,1,12,5);
 
 

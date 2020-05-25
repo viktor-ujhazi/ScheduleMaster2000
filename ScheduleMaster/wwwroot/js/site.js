@@ -362,7 +362,7 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                             } else {
                                 tableCell.textContent = dayList[day - 1].title;
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
-
+                                tableCell.addEventListener("click", ModifyTitle);
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -376,10 +376,12 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                                 tableCell.textContent = hour + " h";
                                 tableCell.setAttribute("id", `tableCell-${0}-${hour}`);
                                 tableCell.setAttribute("class", "tableCell");
+
                             } else {
                                 LoadTask(dayList[day - 1].scheduleID, dayList[day - 1].dayID, hour);
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
                                 tableCell.setAttribute("class", "tableCell");
+                                tableCell.addEventListener("click", AddTask);
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -402,21 +404,28 @@ function LoadTask(scheduleId, dayId, startSlot) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'Slot/TaskToSlot', true);
     xhr.onload = function () {
-        let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`)
+        let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`);
         let result = JSON.parse(xhr.response);
-        cellToChange.setAttribute("rowspan", `${result.slotLength}`);
-        for (let i = 1; i < result.slotLength; i++) {
-            let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
-            cellToSpan.remove();
+        if (result !== null) {
+            cellToChange.removeEventListener("click", AddTask);
+            cellToChange.setAttribute("rowspan", `${result.slotLength}`);
+            for (let i = 1; i < result.slotLength; i++) {
+                let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
+                cellToSpan.remove();
+            }
+            cellToChange.textContent = result.taskModel_.title;
         }
-
-        cellToChange.textContent = result.taskModel_.title;
-        console.log(result);
-        return result.title;
     };
     xhr.send(data);
 }
 
+function AddTask() {
+    alert("MIke");
+}
+
+function ModifyTitle() {
+    alert("Ike");
+}
 
 function SidePointSelected(uncutId, numOfDays) {
     let scheduleId = uncutId.slice(7);
