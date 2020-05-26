@@ -57,7 +57,6 @@ function TaskPage() {
     HideScheduleTable();
     let taskForm = document.querySelector("#taskForm");
     taskForm.setAttribute("style", "display: unset");
-
 };
 
 function HideTaskPage() {
@@ -323,9 +322,6 @@ function SendDataToSchedule(destination, data) {
                         })
                     }
                 }
-
-
-
             }
         }
         xhr.open('POST', destination, true);
@@ -336,20 +332,17 @@ function SendDataToSchedule(destination, data) {
 
 
 function SendDataToDay(destination, data, scheduleTable, numOfDays) {
+    HideSchedulePage();
+    HideTaskPage();
     let xhr = new XMLHttpRequest();
     if (xhr != null) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
-
-
                 let obj = JSON.parse(xhr.responseText);
                 let dayList = [];
-
-
                 for (let i = 0; i < obj.length; i++) {
                     dayList.push(obj[i]);
                 }
-
                 for (let hour = 0; hour < 25; hour++) {
                     let tableRow = document.createElement("tr");
                     if (hour === 0) {
@@ -364,6 +357,7 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                                 tableCell.textContent = dayList[day - 1].title;
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
                                 tableCell.addEventListener("click", () => { ModifyTitle(dayList[day - 1].title, dayList[day - 1].dayID) });
+                                tableCell.setAttribute("class", "tableCell");
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -409,6 +403,7 @@ function LoadTask(scheduleId, dayId, startSlot) {
         let result = JSON.parse(xhr.response);
         if (result !== null) {
             cellToChange.removeEventListener("click", AddTask);
+            cellToChange.addEventListener("click", () => { TaskDetails(dayList[day - 1].title, dayList[day - 1].dayID) });
             cellToChange.setAttribute("rowspan", `${result.slotLength}`);
             for (let i = 1; i < result.slotLength; i++) {
                 let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
@@ -419,23 +414,26 @@ function LoadTask(scheduleId, dayId, startSlot) {
     };
     xhr.send(data);
 }
+function TaskDetails() {
+    ;
+}
 
 function AddTask() {
     alert("MIke");
 }
 
 function ModifyTitle(title, dayId) {
-    let dayTitle=  prompt("Please enter the title", title);
+    let dayTitle = prompt("Please enter the title", title);
+    if (dayTitle !== null) {
+        let data = new FormData();
+        data.append('dayId', dayId);
+        data.append('title', dayTitle);
 
-    let data = new FormData();
-    data.append('dayId', dayId);
-    data.append('title', dayTitle);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'Day/UpdateTitle', true);
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'Day/UpdateTitle', true);
-
-    xhr.send(data)
-
+        xhr.send(data)
+    }
 
 }
 
