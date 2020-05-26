@@ -57,5 +57,11 @@ namespace ScheduleMaster.Controllers
             }
             return Json(taskResult);
         }
+
+        public void DeleteSlot()
+        {
+            var slotId = Convert.ToInt32(Request.Form["slotId"]);
+            _slotService.DeleteSlot(slotId);
+        }
     }
 }

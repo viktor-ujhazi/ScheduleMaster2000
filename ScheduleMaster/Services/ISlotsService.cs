@@ -6,7 +6,7 @@ namespace ScheduleMaster.Services
     public interface ISlotsService
     {
         void AddSlot(int scheduleID, int dayID, int taskID, int startSlot, int slotLength);
-        void DeleteSlot(int userID, int slotID);
+        void DeleteSlot(int slotID, int? userID = null);
         List<SlotModel> GetAllSlot(int scheduleID);
         SlotModel GetSlot(int id);
         void UpdateSlot(int slotID, int dayID, int taskID, int startSlot, int slotLength);

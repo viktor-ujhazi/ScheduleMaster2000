@@ -9,5 +9,6 @@ namespace ScheduleMaster.Models
     {
         public TaskModel TaskModel_ { get; set; }
         public int SlotLength { get; set; }
+        public int SlotId { get; set; }
     }
 }
