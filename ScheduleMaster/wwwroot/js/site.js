@@ -335,7 +335,14 @@ function SendDataToSchedule(destination, data) {
 }
 
 
-function SendDataToDay(destination, data, scheduleTable, numOfDays) {
+function SendDataToDay(destination, data) {
+    let scheduleTable = document.querySelector("#ScheduleTable");
+
+    while (scheduleTable.firstChild) {
+        scheduleTable.removeChild(scheduleTable.lastChild);
+    }
+
+
     let xhr = new XMLHttpRequest();
     if (xhr != null) {
         xhr.onreadystatechange = function () {
@@ -344,12 +351,12 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
 
                 let obj = JSON.parse(xhr.responseText);
                 let dayList = [];
-
+                 
 
                 for (let i = 0; i < obj.length; i++) {
                     dayList.push(obj[i]);
                 }
-
+                let numOfDays = dayList.length;
                 for (let hour = 0; hour < 25; hour++) {
                     let tableRow = document.createElement("tr");
                     if (hour === 0) {
@@ -363,7 +370,7 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                             } else {
                                 tableCell.textContent = dayList[day - 1].title;
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
-                                tableCell.addEventListener("click", () => { ModifyTitle(dayList[day - 1].title, dayList[day - 1].dayID) });
+                                tableCell.addEventListener("click", () => { ModifyTitle(dayList[day - 1].title, dayList[day - 1].dayID, dayList[0].scheduleID) });
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -387,6 +394,7 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                             tableRow.appendChild(tableCell);
                         }
                     }
+                    
                     scheduleTable.appendChild(tableRow);
                 }
             }
@@ -424,7 +432,7 @@ function AddTask() {
     alert("MIke");
 }
 
-function ModifyTitle(title, dayId) {
+function ModifyTitle(title, dayId, scheduleId) {
     let dayTitle=  prompt("Please enter the title", title);
 
     let data = new FormData();
@@ -433,9 +441,18 @@ function ModifyTitle(title, dayId) {
 
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'Day/UpdateTitle', true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var scheduledata = new FormData();
+            scheduledata.append('scheduleId', scheduleId);
 
-    xhr.send(data)
+            SendDataToDay("Day/Index", scheduledata);
+        }
+    }
 
+    xhr.send(data);
+
+    
 
 }
 
@@ -453,7 +470,7 @@ function SidePointSelected(uncutId, numOfDays) {
 
     var data = new FormData();
     data.append('scheduleId', scheduleId);
-    SendDataToDay("Day/Index", data, scheduleTable, numOfDays);
+    SendDataToDay("Day/Index", data);
 }
 
 function EditSchedule(sID, title, daysNum, userID, isPublic) {
