@@ -55,6 +55,12 @@ namespace ScheduleMaster.Controllers
             return resultJson;
         }
 
+        public ActionResult GetAllTasks()
+        {
+            int userID = Convert.ToInt32(Request.Form["userID"]);
+
+            return Json(_sqlTaskService.GetAllTask(userID));
+        }
 
     }
 }
