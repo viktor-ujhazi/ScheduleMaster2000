@@ -138,7 +138,7 @@ namespace ScheduleMaster.Services
 
             command.ExecuteNonQuery();
         }
-        public void DeleteSlot(int userID, int slotID)
+        public void DeleteSlot(int slotID, int? userID = null)
         {
             using var command = _connection.CreateCommand();
 
@@ -150,7 +150,7 @@ namespace ScheduleMaster.Services
             slotIDParam.ParameterName = "slot_id";
             slotIDParam.Value = slotID;
 
-            command.CommandText = "DELETE FROM slots WHERE slot_id= @slot_id)";
+            command.CommandText = "DELETE FROM slots WHERE slot_id= @slot_id";
             //command.Parameters.Add(userIdParam);
             command.Parameters.Add(slotIDParam);
 
@@ -173,35 +173,36 @@ namespace ScheduleMaster.Services
             return slots;
         }
 
-        
+
         public SlotTaskModel GetTaskForSlot(int scheduleID, int dayID, int startSlot)
         {
             var commandT = _connection.CreateCommand();
-            commandT.CommandText = $"(SELECT task_id, slot_length FROM slots WHERE day_id = {dayID} and schedule_id = {scheduleID} and start_slot = {startSlot}) ";
+            commandT.CommandText = $"(SELECT task_id, slot_length, slot_id FROM slots WHERE day_id = {dayID} and schedule_id = {scheduleID} and start_slot = {startSlot}) ";
             var readerT = commandT.ExecuteReader();
             readerT.Read();
             int taskID = (int)readerT["task_id"];
             int slotLength = (int)readerT["slot_length"];
+            int slotID = (int)readerT["slot_id"];
             commandT.Dispose();
             readerT.Dispose();
 
             using var command = _connection.CreateCommand();
             command.CommandText = $"SELECT * FROM tasks WHERE task_id = {taskID} ";
-              
+
 
             using var reader = command.ExecuteReader();
             reader.Read();
             SlotTaskModel resultTask = new SlotTaskModel
             {
-                TaskModel_ = new TaskModel{
-                TaskID = (int)reader["task_id"],
-                Title = (string)reader["title"],
-                Content = (string)reader["content"],
-                UserID = (int)reader["user_id"],
+                TaskModel_ = new TaskModel
+                {
+                    TaskID = (int)reader["task_id"],
+                    Title = (string)reader["title"],
+                    Content = (string)reader["content"],
+                    UserID = (int)reader["user_id"],
                 },
-                SlotLength = slotLength
-
-
+                SlotLength = slotLength,
+                SlotId = slotID
             };
 
 

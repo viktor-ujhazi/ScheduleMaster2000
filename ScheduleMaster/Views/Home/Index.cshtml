@@ -46,6 +46,21 @@
             </div>
         </div>
 
+        <div id="id01" class="modal">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+            <form class="modal-content">
+                <div class="container">
+                    <h1 id="taskTitle"></h1>
+                    <p id="taskContent"></p>
+
+                    <div class="clearfix">
+                        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Ok</button>
+                        <button type="button" id="deleteButton" class="deletebtn">Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <table id="ScheduleTable" style="display: none"></table>
     </div>
 </body>

@@ -346,10 +346,10 @@ function SendDataToDay(destination, data) {
                 let obj = JSON.parse(xhr.responseText);
                 let dayList = [];
 
-
                 for (let i = 0; i < obj.length; i++) {
                     dayList.push(obj[i]);
                 }
+                console.log(dayList);
                 let numOfDays = dayList.length;
                 for (let hour = 0; hour < 25; hour++) {
                     let tableRow = document.createElement("tr");
@@ -411,9 +411,11 @@ function LoadTask(scheduleId, dayId, startSlot) {
     xhr.onload = function () {
         let cellToChange = document.getElementById(`tableCell-${dayId}-${startSlot}`);
         let result = JSON.parse(xhr.response);
+
         if (result !== null) {
+
             cellToChange.removeEventListener("click", AddTask);
-            cellToChange.addEventListener("click", () => { TaskDetails(dayList[day - 1].title, dayList[day - 1].dayID) });
+            cellToChange.addEventListener("click", () => { TaskDetails(result) });
             cellToChange.setAttribute("rowspan", `${result.slotLength}`);
             for (let i = 1; i < result.slotLength; i++) {
                 let cellToSpan = document.getElementById(`tableCell-${dayId}-${startSlot + i}`);
@@ -424,8 +426,28 @@ function LoadTask(scheduleId, dayId, startSlot) {
     };
     xhr.send(data);
 }
-function TaskDetails() {
-    ;
+function TaskDetails(TaskModel) {
+    console.log(TaskModel)
+    document.getElementById('id01').style.display = 'block';
+
+    let taskTitle = document.getElementById('taskTitle');
+    let taskContent = document.getElementById("taskContent");
+
+    taskContent.innerText = TaskModel.taskModel_.content;
+    taskTitle.innerText = TaskModel.taskModel_.title;
+
+    let deleteButton = document.getElementById('deleteButton')
+    deleteButton.addEventListener("click", () => { DeleteTask(TaskModel.slotId) });
+}
+
+function DeleteTask(SlotId) {
+    document.getElementById('id01').style.display = 'none';
+    let data = new FormData;
+    data.append('slotId', SlotId);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'Slot/DeleteSlot', true);
+    xhr.send(data);
 }
 
 function AddTask() {
@@ -435,7 +457,7 @@ function AddTask() {
 function ModifyTitle(title, dayId, scheduleId) {
     let dayTitle = prompt("Please enter the title", title);
     if (dayTitle !== null) {
-        1
+
         let data = new FormData();
         data.append('dayId', dayId);
         data.append('title', dayTitle);
@@ -450,7 +472,6 @@ function ModifyTitle(title, dayId, scheduleId) {
                 SendDataToDay("Day/Index", scheduledata);
             }
         }
-
         xhr.send(data);
     }
 
