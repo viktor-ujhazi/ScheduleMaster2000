@@ -426,8 +426,9 @@ function LoadTask(scheduleId, dayId, startSlot) {
     };
     xhr.send(data);
 }
+
 function TaskDetails(TaskModel) {
-    console.log(TaskModel)
+
     document.getElementById('id01').style.display = 'block';
 
     let taskTitle = document.getElementById('taskTitle');
@@ -451,7 +452,32 @@ function DeleteTask(SlotId) {
 }
 
 function AddTask() {
-    alert("MIke");
+
+
+    let data = new FormData();
+    data.append('userID', currentProfileID)
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'Task/GetAllTasks', true)
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            let allTasks = JSON.parse(xhr.response);
+            let taskList = document.getElementById('tasks');
+
+            for (let i = 0; i < allTasks.length; i++) {
+                let task = document.createElement('option');
+                task.setAttribute('value', allTasks[i].title);
+                task.innerText = allTasks[i].title;
+
+                taskList.appendChild(task);
+            }
+
+            document.getElementById('id01').style.display = 'block';
+            document.getElementById('dropDown').style.display = 'block';
+        }
+    }
+    xhr.send(data)
+
 }
 
 function ModifyTitle(title, dayId, scheduleId) {
@@ -535,7 +561,6 @@ function EditTask(tID, title, taskContent, userID) {
 
     SendDataToSchedule('Task/UpdateTask', data);
 }
-
 
 
 
