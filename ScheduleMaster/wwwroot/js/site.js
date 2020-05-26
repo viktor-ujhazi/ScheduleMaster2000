@@ -358,7 +358,6 @@ function SendDataToDay(destination, data, scheduleTable, numOfDays) {
                                 tableCell.textContent = "Time";
                                 tableCell.setAttribute("id", `tableCell-${0}-${hour}`);
                                 tableCell.setAttribute("class", "tableCell");
-                                tableCell.setAttribute("rowspan","2");
                             } else {
                                 tableCell.textContent = dayList[day - 1].title;
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
