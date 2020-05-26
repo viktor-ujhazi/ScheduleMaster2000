@@ -390,7 +390,7 @@ function SendDataToDay(destination, data) {
                             tableRow.appendChild(tableCell);
                         }
                     }
-                    
+
                     scheduleTable.appendChild(tableRow);
                 }
             }
@@ -433,26 +433,27 @@ function AddTask() {
 }
 
 function ModifyTitle(title, dayId, scheduleId) {
-    let dayTitle=  prompt("Please enter the title", title);
+    let dayTitle = prompt("Please enter the title", title);
+    if (dayTitle !== null) {
+        1
+        let data = new FormData();
+        data.append('dayId', dayId);
+        data.append('title', dayTitle);
 
-    let data = new FormData();
-    data.append('dayId', dayId);
-    data.append('title', dayTitle);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'Day/UpdateTitle', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var scheduledata = new FormData();
+                scheduledata.append('scheduleId', scheduleId);
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'Day/UpdateTitle', true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var scheduledata = new FormData();
-            scheduledata.append('scheduleId', scheduleId);
-
-            SendDataToDay("Day/Index", scheduledata);
+                SendDataToDay("Day/Index", scheduledata);
+            }
         }
+
+        xhr.send(data);
     }
 
-    xhr.send(data);
-
-    
 
 }
 
