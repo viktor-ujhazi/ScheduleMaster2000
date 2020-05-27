@@ -430,7 +430,8 @@ function LoadTask(scheduleId, dayId, startSlot) {
 function TaskDetails(TaskModel) {
 
     document.getElementById('id01').style.display = 'block';
-
+    document.getElementById('modifyContent').textContent="Modify: "
+    
     let taskTitle = document.getElementById('taskTitle');
     let taskContent = document.getElementById("taskContent");
 
@@ -466,6 +467,8 @@ function TaskToSlot(scheduleId, dayId, startTime) {
     let taskTitle = document.getElementById('taskTitle');
     taskTitle.textContent = "Add task";
 
+    let taskLengthBlock = document.getElementById("duration");
+    taskLengthBlock.value = "";
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'Task/GetAllTasks', true)
     xhr.onreadystatechange = function () {
@@ -489,18 +492,35 @@ function TaskToSlot(scheduleId, dayId, startTime) {
 
                 let taskToAdd = document.getElementById('tasks');
                 let taskId = taskToAdd.value;
-                CreateSlot(scheduleId, dayId, startTime, taskId)
+
+                taskLength = taskLengthBlock.value;
+                
+                CreateSlot(scheduleId, dayId, startTime, taskId, taskLength)
             });
         }
     }
     xhr.send(data)
 }
 
-function CreateSlot(scheduleId, dayId, startTime, taskId) {
-    console.log(scheduleId);
-    console.log(dayId);
-    console.log(startTime);
-    console.log(taskId);
+function CreateSlot(scheduleId, dayId, startTime, taskId, slotLength) {
+    let data = new FormData();
+    data.append('scheduleId', scheduleId);
+    data.append('dayId', dayId);
+    data.append('startTime', startTime);
+    data.append('taskId', taskId);
+    data.append('slotLength', slotLength);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'Slot/AddTask', true);
+    xhr.send(data);
+
+    let modal = document.getElementById("id01");
+    modal.setAttribute("style","display: none");
+
+    var scheduledata = new FormData();
+    scheduledata.append('scheduleId', scheduleId);
+
+    SendDataToDay("Day/Index", scheduledata);
 }
 
 function ModifyTitle(title, dayId, scheduleId) {

@@ -63,5 +63,17 @@ namespace ScheduleMaster.Controllers
             var slotId = Convert.ToInt32(Request.Form["slotId"]);
             _slotService.DeleteSlot(slotId);
         }
+
+
+        public void AddTask()
+        {
+            var scheduleId = Convert.ToInt32(Request.Form["scheduleId"]);
+            var dayId = Convert.ToInt32(Request.Form["dayId"]);
+            var taskId = Convert.ToInt32(Request.Form["taskId"]);
+            var startSlot = Convert.ToInt32(Request.Form["startTime"]);
+            var slotLength = Convert.ToInt32(Request.Form["slotLength"]);
+
+            _slotService.AddSlot(scheduleId, dayId, taskId, startSlot, slotLength);
+        }
     }
 }
