@@ -53,15 +53,19 @@
                     <h1 id="taskTitle"></h1>
                     <p id="taskContent"></p>
 
-                    <div id="dropDown" display="none">
+                    <div id="dropDown" style="display:none">
+
+
                         <label for="tasks">Choose a task:</label>
-                        <select id="tasks" name="tasks">
-                        </select>
-                        <input type="submit">
+                        <select id="tasks" name="tasks"></select>
+                        <br />
+                        Duration: <br />
+                        <input type="text" name="duration" value=""><p />
+                        <input type="button" id="addTaskToSlot" value="Submit">
                     </div>
 
-                    <div class="clearfix">
-                        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Ok</button>
+                    <div class="clearfix" id="detailButtons">
+                        <button type="button" id="okButton" class="cancelbtn">Ok</button>
                         <button type="button" id="deleteButton" class="deletebtn">Delete</button>
                     </div>
                 </div>

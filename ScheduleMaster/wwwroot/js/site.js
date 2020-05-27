@@ -385,7 +385,7 @@ function SendDataToDay(destination, data) {
                                 LoadTask(dayList[day - 1].scheduleID, dayList[day - 1].dayID, hour);
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
                                 tableCell.setAttribute("class", "tableCell");
-                                tableCell.addEventListener("click", AddTask);
+                                tableCell.addEventListener("click", () => { TaskToSlot(dayList[0].scheduleID, dayList[day - 1].dayID, hour) });
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -414,7 +414,7 @@ function LoadTask(scheduleId, dayId, startSlot) {
 
         if (result !== null) {
 
-            cellToChange.removeEventListener("click", AddTask);
+            cellToChange.removeEventListener("click", TaskToSlot);
             cellToChange.addEventListener("click", () => { TaskDetails(result) });
             cellToChange.setAttribute("rowspan", `${result.slotLength}`);
             for (let i = 1; i < result.slotLength; i++) {
@@ -437,7 +437,11 @@ function TaskDetails(TaskModel) {
     taskContent.innerText = TaskModel.taskModel_.content;
     taskTitle.innerText = TaskModel.taskModel_.title;
 
-    let deleteButton = document.getElementById('deleteButton')
+    let deleteButton = document.getElementById('deleteButton');
+    let okButton = document.getElementById('okButton');
+
+    okButton.addEventListener("click", () => document.getElementById('id01').style.display = 'none');
+
     deleteButton.addEventListener("click", () => { DeleteTask(TaskModel.slotId) });
 }
 
@@ -451,33 +455,52 @@ function DeleteTask(SlotId) {
     xhr.send(data);
 }
 
-function AddTask() {
-
-
+function TaskToSlot(scheduleId, dayId, startTime) {
     let data = new FormData();
     data.append('userID', currentProfileID)
+    let taskList = document.getElementById('tasks');
+    while (taskList.firstChild) {
+        taskList.removeChild(taskList.lastChild);
+    }
+    document.getElementById("detailButtons").style.display = 'none';
+    let taskTitle = document.getElementById('taskTitle');
+    taskTitle.textContent = "Add task";
 
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'Task/GetAllTasks', true)
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             let allTasks = JSON.parse(xhr.response);
-            let taskList = document.getElementById('tasks');
+
+
 
             for (let i = 0; i < allTasks.length; i++) {
                 let task = document.createElement('option');
-                task.setAttribute('value', allTasks[i].title);
+                task.setAttribute('value', allTasks[i].taskID);
                 task.innerText = allTasks[i].title;
-
                 taskList.appendChild(task);
             }
 
             document.getElementById('id01').style.display = 'block';
             document.getElementById('dropDown').style.display = 'block';
+            let button = document.getElementById('addTaskToSlot');
+
+            button.addEventListener('click', () => {
+
+                let taskToAdd = document.getElementById('tasks');
+                let taskId = taskToAdd.value;
+                CreateSlot(scheduleId, dayId, startTime, taskId)
+            });
         }
     }
     xhr.send(data)
+}
 
+function CreateSlot(scheduleId, dayId, startTime, taskId) {
+    console.log(scheduleId);
+    console.log(dayId);
+    console.log(startTime);
+    console.log(taskId);
 }
 
 function ModifyTitle(title, dayId, scheduleId) {
