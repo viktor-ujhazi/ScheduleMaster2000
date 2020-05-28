@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS tasks CASCADE;
 DROP TABLE IF EXISTS schedules CASCADE;
 DROP TABLE IF EXISTS days CASCADE;
 DROP TABLE IF EXISTS slots CASCADE;
+DROP TABLE IF EXISTS logs CASCADE;
 
 
 CREATE TABLE users(
@@ -47,7 +48,7 @@ CREATE TABLE slots(
 );
 CREATE TABLE logs(
 	log_id SERIAL PRIMARY KEY,
-	user_id integer INTEGER NOT NULL REFERENCES users(user_id),
+	user_id INTEGER NOT NULL REFERENCES users(user_id),
 	log_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
 	action_text TEXT
 );
@@ -56,7 +57,7 @@ CREATE OR REPLACE FUNCTION check_slot() RETURNS TRIGGER AS $$
 DECLARE match_cell integer;
 BEGIN
    SELECT COUNT(start_slot) FROM slots WHERE NEW.schedule_id = slots.schedule_id AND NEW.day_id = slots.day_id 
-   AND (NEW.start_slot + NEW.slot_length > start_slot) into match_cell;
+   AND NEW.start_slot<start_slot AND (NEW.start_slot + NEW.slot_length > start_slot) into match_cell;
         
 	IF match_cell > 0 THEN
         RAISE EXCEPTION 'Occupied' USING ERRCODE = 45001;
