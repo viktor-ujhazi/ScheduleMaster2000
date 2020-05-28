@@ -38,6 +38,7 @@ namespace ScheduleMaster.Controllers
 
         public IActionResult MyAjaxGET()
         {
+
             string temp = Request.Query["username"];
 
             // Perform your operation  

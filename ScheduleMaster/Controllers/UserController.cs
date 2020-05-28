@@ -18,11 +18,13 @@ namespace ScheduleMaster.Controllers
     {
         private readonly IUsersService _sqlUsersService;
         private readonly ICyberSecurityProvider _cyberSecurity;
+        private readonly ISQLlogger _sqlLogger;
 
-        public UserController(IUsersService usersService, ICyberSecurityProvider cyberSecurity)
+        public UserController(IUsersService usersService, ICyberSecurityProvider cyberSecurity, ISQLlogger sqlLogger)
         {
             _sqlUsersService = usersService;
             _cyberSecurity = cyberSecurity;
+            _sqlLogger = sqlLogger;
         }
 
 
@@ -36,6 +38,9 @@ namespace ScheduleMaster.Controllers
             try
             {
                 _sqlUsersService.AddUser(name, email, encryptedPassword);
+                var userId = _sqlUsersService.GetUserId(email);
+
+                _sqlLogger.Log(userId, "User registered");
             }
             catch (Npgsql.PostgresException)
             {
@@ -57,19 +62,18 @@ namespace ScheduleMaster.Controllers
                 return Json(0);
             }
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
-
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
-            { };
-
+            var userId = _sqlUsersService.GetUserId(email);
 
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
+                    {
+                        new Claim("Id", userId.ToString()),
+                        new Claim("Email", email),
+                    }, CookieAuthenticationDefaults.AuthenticationScheme)),
+                    new AuthenticationProperties());
+
+            _sqlLogger.Log(userId, "Logged in");
             return Json(_sqlUsersService.GetUserId(email));
         }
 
@@ -77,7 +81,9 @@ namespace ScheduleMaster.Controllers
         [HttpGet]
         public async Task<IActionResult> LogoutAsync()
         {
+            int userId = int.Parse(HttpContext.User.FindFirstValue("Id"));
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _sqlLogger.Log(userId, "Logged out");
             return Json("Logged out");
         }
     }

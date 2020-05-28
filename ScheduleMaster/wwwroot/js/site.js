@@ -1,4 +1,4 @@
-﻿﻿const grid = document.querySelector("#headerGrid");
+﻿const grid = document.querySelector("#headerGrid");
 let currentProfileEmail = null;
 let currentProfileID = null;
 let dropDownStatus = 'none';
@@ -68,9 +68,9 @@ function HideTaskPage() {
 function HideScheduleTable() {
     let table = document.querySelector("#ScheduleTable");
     table.setAttribute("style", "display:none");
-    while (table.firstChild) {
-        table.remove(table.lastChild);
-    }
+    //while (table.firstChild) {
+    /*table.remove(table.lastChild)*/;
+    //}
 }
 
 function LoginPage() {
@@ -386,10 +386,10 @@ function SendDataToDay(destination, data) {
                                 tableCell.setAttribute("class", "tableCell");
 
                             } else {
-                                
+
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
                                 tableCell.setAttribute("class", "tableCell");
-                                
+
                                 LoadTask(dayList[day - 1].scheduleID, dayList[day - 1].dayID, hour);
                             }
                             tableRow.appendChild(tableCell);
@@ -432,7 +432,7 @@ function LoadTask(scheduleId, dayId, startSlot) {
                 cellToChange.addEventListener("click", () => { TaskToSlot(scheduleId, dayId, startSlot) });
             }
         }
-        
+
     };
     xhr.send(data);
 }
@@ -496,7 +496,7 @@ function TaskToSlot(scheduleId, dayId, startTime) {
 
             document.getElementById('id01').style.display = 'block';
             document.getElementById('dropDown').style.display = 'block';
-            
+
             let button = document.getElementById('addTaskToSlot');
             let newButton = button.cloneNode(true);
             button.parentNode.replaceChild(newButton, button);
@@ -538,7 +538,7 @@ function CreateSlot(scheduleId, dayId, startTime, taskId, slotLength) {
     xhr.send(data);
 
     let modal = document.getElementById("id01");
-    modal.setAttribute("style","display: none");
+    modal.setAttribute("style", "display: none");
 
     var scheduledata = new FormData();
     scheduledata.append('scheduleId', scheduleId);

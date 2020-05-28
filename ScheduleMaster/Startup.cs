@@ -38,6 +38,7 @@ namespace ScheduleMaster
                 connection.Open();
                 return connection;
             });
+            services.AddScoped<ISQLlogger, SQLLogger>();
             services.AddScoped<IUsersService, SQLUsersService>();
             services.AddScoped<ITasksService, SQLTasksService>();
             services.AddScoped<ISchedulesService, SQLSchedulesService>();

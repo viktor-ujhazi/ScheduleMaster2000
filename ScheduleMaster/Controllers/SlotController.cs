@@ -18,10 +18,11 @@ namespace ScheduleMaster.Controllers
     public class SlotController : Controller
     {
         private readonly ISlotsService _slotService;
-
-        public SlotController(ISlotsService slotService)
+        private readonly ISQLlogger _sqlLogger;
+        public SlotController(ISlotsService slotService, ISQLlogger sqlLogger)
         {
             _slotService = slotService;
+            _sqlLogger = sqlLogger;
         }
         public IActionResult Index()
         {
@@ -45,10 +46,12 @@ namespace ScheduleMaster.Controllers
             var dayId = Convert.ToInt32(Request.Form["dayId"]);
             var startSlot = Convert.ToInt32(Request.Form["startSlot"]);
 
+
             SlotTaskModel taskResult = null;
             try
             {
                 taskResult = _slotService.GetTaskForSlot(scheduleId, dayId, startSlot);
+
             }
             catch (Exception)
             {
@@ -60,7 +63,10 @@ namespace ScheduleMaster.Controllers
 
         public void DeleteSlot()
         {
+            int userId = int.Parse(HttpContext.User.FindFirstValue("Id"));
             var slotId = Convert.ToInt32(Request.Form["slotId"]);
+
+            _sqlLogger.Log(userId, $"Slot number {slotId} deleted");
             _slotService.DeleteSlot(slotId);
         }
 
@@ -75,8 +81,10 @@ namespace ScheduleMaster.Controllers
                 var taskId = Convert.ToInt32(Request.Form["taskId"]);
                 var startSlot = Convert.ToInt32(Request.Form["startTime"]);
                 var slotLength = Convert.ToInt32(Request.Form["slotLength"]);
+                int userId = int.Parse(HttpContext.User.FindFirstValue("Id"));
 
                 _slotService.AddSlot(scheduleId, dayId, taskId, startSlot, slotLength);
+                _sqlLogger.Log(userId, $"TaskId {taskId}, added to schedule {scheduleId}, Day {dayId}, hour {startSlot}.");
                 return Json("OK");
             }
             catch (Exception)
