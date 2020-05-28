@@ -1,4 +1,4 @@
-﻿﻿const grid = document.querySelector("#headerGrid");
+﻿const grid = document.querySelector("#headerGrid");
 let currentProfileEmail = null;
 let currentProfileID = null;
 
@@ -430,8 +430,9 @@ function LoadTask(scheduleId, dayId, startSlot) {
 function TaskDetails(TaskModel) {
 
     document.getElementById('id01').style.display = 'block';
-    document.getElementById('modifyContent').textContent="Modify: "
-    
+    document.getElementById('dropDown').style.display = 'none';
+
+
     let taskTitle = document.getElementById('taskTitle');
     let taskContent = document.getElementById("taskContent");
 
@@ -440,6 +441,7 @@ function TaskDetails(TaskModel) {
 
     let deleteButton = document.getElementById('deleteButton');
     let okButton = document.getElementById('okButton');
+
 
     okButton.addEventListener("click", () => document.getElementById('id01').style.display = 'none');
 
@@ -494,7 +496,7 @@ function TaskToSlot(scheduleId, dayId, startTime) {
                 let taskId = taskToAdd.value;
 
                 taskLength = taskLengthBlock.value;
-                
+
                 CreateSlot(scheduleId, dayId, startTime, taskId, taskLength)
             });
         }
@@ -515,7 +517,7 @@ function CreateSlot(scheduleId, dayId, startTime, taskId, slotLength) {
     xhr.send(data);
 
     let modal = document.getElementById("id01");
-    modal.setAttribute("style","display: none");
+    modal.setAttribute("style", "display: none");
 
     var scheduledata = new FormData();
     scheduledata.append('scheduleId', scheduleId);

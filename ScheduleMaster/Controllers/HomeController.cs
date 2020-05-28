@@ -22,6 +22,7 @@ namespace ScheduleMaster.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("most");
             return View();
         }
 
@@ -38,6 +39,7 @@ namespace ScheduleMaster.Controllers
 
         public IActionResult MyAjaxGET()
         {
+
             string temp = Request.Query["username"];
 
             // Perform your operation  
