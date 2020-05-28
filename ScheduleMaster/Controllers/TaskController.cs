@@ -7,10 +7,12 @@ namespace ScheduleMaster.Controllers
     public class TaskController : Controller
     {
         private readonly ITasksService _sqlTaskService;
+        private readonly ISQLlogger _sqlLogger;
 
-        public TaskController(ITasksService sqlTaskService)
+        public TaskController(ITasksService sqlTaskService, ISQLlogger sqlLogger)
         {
             _sqlTaskService = sqlTaskService;
+            _sqlLogger = sqlLogger;
         }
         public IActionResult Index()
         {
@@ -32,7 +34,7 @@ namespace ScheduleMaster.Controllers
             var userId = Convert.ToInt32(Request.Form["userID"]);
 
             _sqlTaskService.AddTask(title, content, userId);
-
+            _sqlLogger.Log(userId, $"Task added, title: {title}, content: {content}");
             return Json(_sqlTaskService.GetAllTask(userId));
         }
 
@@ -46,7 +48,7 @@ namespace ScheduleMaster.Controllers
 
 
             _sqlTaskService.UpdateTask(taskId, title, content, userID);
-
+            _sqlLogger.Log(userID, $"Task updated, title: {title}, content: {content}");
 
             var resultJson = Json(_sqlTaskService.GetAllTask(Convert.ToInt32(Request.Form["userid"])));
             return resultJson;

@@ -17,10 +17,11 @@ namespace ScheduleMaster.Controllers
     public class ScheduleController : Controller
     {
         private readonly ISchedulesService _sqlScheduleService;
-
-        public ScheduleController(ISchedulesService sqlScheduleService)
+        private readonly ISQLlogger _sqlLogger;
+        public ScheduleController(ISchedulesService sqlScheduleService, ISQLlogger sqlLogger)
         {
             _sqlScheduleService = sqlScheduleService;
+            _sqlLogger = sqlLogger;
         }
         public ActionResult Index()
         {
@@ -36,7 +37,7 @@ namespace ScheduleMaster.Controllers
             int userID = Convert.ToInt32(Request.Form["userID"]);
             bool isPublic = Convert.ToBoolean(Request.Form["isPublic"]);
 
-
+            _sqlLogger.Log(userID, $"Schedule updated title: {title}");
 
             _sqlScheduleService.UpdateSchedule(scheduleId, title, numOfDays, userID, isPublic);
 
@@ -50,6 +51,7 @@ namespace ScheduleMaster.Controllers
             var duration = Convert.ToInt32(Request.Form["numOfDays"]);
             var userId = Convert.ToInt32(Request.Form["userID"]);
 
+            _sqlLogger.Log(userId, $"Schedule added title: {title}");
             _sqlScheduleService.AddSchedule(title, duration, userId);
 
             var resultJson = Json(_sqlScheduleService.GetAllSchedule(userId));
