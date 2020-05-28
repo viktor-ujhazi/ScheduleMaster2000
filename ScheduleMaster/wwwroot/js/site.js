@@ -506,9 +506,11 @@ function TaskToSlot(scheduleId, dayId, startTime) {
                 let taskId = taskToAdd.value;
 
                 taskLength = taskLengthBlock.value;
-                
-                CreateSlot(scheduleId, dayId, startTime, taskId, taskLength)
-                button
+                if (taskLength > 0) {
+                    CreateSlot(scheduleId, dayId, startTime, taskId, taskLength)
+                } else {
+                    alert("why?")
+                }
             });
         }
     }
