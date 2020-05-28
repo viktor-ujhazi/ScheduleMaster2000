@@ -524,6 +524,14 @@ function CreateSlot(scheduleId, dayId, startTime, taskId, slotLength) {
     data.append('slotLength', slotLength);
 
     let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            let status = JSON.parse(xhr.response);
+            if (status === "ERROR") {
+                alert('The specified time is occupied by another task');
+            }
+        }
+    }
     xhr.open('POST', 'Slot/AddTask', true);
     xhr.send(data);
 
