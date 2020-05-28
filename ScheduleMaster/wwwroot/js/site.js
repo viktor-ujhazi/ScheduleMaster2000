@@ -1,6 +1,7 @@
 ﻿﻿const grid = document.querySelector("#headerGrid");
 let currentProfileEmail = null;
 let currentProfileID = null;
+let dropDownStatus = 'none';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -67,6 +68,9 @@ function HideTaskPage() {
 function HideScheduleTable() {
     let table = document.querySelector("#ScheduleTable");
     table.setAttribute("style", "display:none");
+    while (table.firstChild) {
+        table.remove(table.lastChild);
+    }
 }
 
 function LoginPage() {
@@ -382,10 +386,11 @@ function SendDataToDay(destination, data) {
                                 tableCell.setAttribute("class", "tableCell");
 
                             } else {
-                                LoadTask(dayList[day - 1].scheduleID, dayList[day - 1].dayID, hour);
+                                
                                 tableCell.setAttribute("id", `tableCell-${dayList[day - 1].dayID}-${hour}`);
                                 tableCell.setAttribute("class", "tableCell");
-                                tableCell.addEventListener("click", () => { TaskToSlot(dayList[0].scheduleID, dayList[day - 1].dayID, hour) });
+                                
+                                LoadTask(dayList[day - 1].scheduleID, dayList[day - 1].dayID, hour);
                             }
                             tableRow.appendChild(tableCell);
                         }
@@ -414,7 +419,7 @@ function LoadTask(scheduleId, dayId, startSlot) {
 
         if (result !== null) {
 
-            cellToChange.removeEventListener("click", TaskToSlot);
+            //cellToChange.removeEventListener("click", TaskToSlot);
             cellToChange.addEventListener("click", () => { TaskDetails(result) });
             cellToChange.setAttribute("rowspan", `${result.slotLength}`);
             for (let i = 1; i < result.slotLength; i++) {
@@ -422,7 +427,12 @@ function LoadTask(scheduleId, dayId, startSlot) {
                 cellToSpan.remove();
             }
             cellToChange.textContent = result.taskModel_.title;
+        } else {
+            if (cellToChange !== null) {
+                cellToChange.addEventListener("click", () => { TaskToSlot(scheduleId, dayId, startSlot) });
+            }
         }
+        
     };
     xhr.send(data);
 }
@@ -430,8 +440,8 @@ function LoadTask(scheduleId, dayId, startSlot) {
 function TaskDetails(TaskModel) {
 
     document.getElementById('id01').style.display = 'block';
-    document.getElementById('modifyContent').textContent="Modify: "
-    
+    document.getElementById('dropDown').style.display = 'none';
+    console.log(TaskModel);
     let taskTitle = document.getElementById('taskTitle');
     let taskContent = document.getElementById("taskContent");
 
@@ -440,7 +450,7 @@ function TaskDetails(TaskModel) {
 
     let deleteButton = document.getElementById('deleteButton');
     let okButton = document.getElementById('okButton');
-
+    document.getElementById('detailButtons').style.display = 'block';
     okButton.addEventListener("click", () => document.getElementById('id01').style.display = 'none');
 
     deleteButton.addEventListener("click", () => { DeleteTask(TaskModel.slotId) });
@@ -486,9 +496,11 @@ function TaskToSlot(scheduleId, dayId, startTime) {
 
             document.getElementById('id01').style.display = 'block';
             document.getElementById('dropDown').style.display = 'block';
+            
             let button = document.getElementById('addTaskToSlot');
-
-            button.addEventListener('click', () => {
+            let newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            newButton.addEventListener('click', () => {
 
                 let taskToAdd = document.getElementById('tasks');
                 let taskId = taskToAdd.value;
@@ -496,6 +508,7 @@ function TaskToSlot(scheduleId, dayId, startTime) {
                 taskLength = taskLengthBlock.value;
                 
                 CreateSlot(scheduleId, dayId, startTime, taskId, taskLength)
+                button
             });
         }
     }
